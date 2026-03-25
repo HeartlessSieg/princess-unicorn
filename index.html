@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Princess & the Unicorn — Save Sir Knight!</title>
+<title>Princess & the Unicorn — Save the Kingdom!</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -27,7 +27,7 @@ body{
   position:relative;width:min(960px,100vw);aspect-ratio:960/520;
   border:2px solid #8b2be2;box-shadow:0 0 50px #8b2be255;overflow:hidden;
 }
-canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
+canvas{display:block;width:100%;height:100%;image-rendering:auto;}
 #overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at center,rgba(40,5,80,0.97) 0%,rgba(5,0,20,0.98) 100%);
@@ -171,7 +171,7 @@ function justPressed(c){ return keys[c] && !prevKeys[c]; }
 
 // ── LEVEL CONFIGS ─────────────────────────────────────
 // Enemy spawn intervals — scale up aggressively on later levels
-const ENEMY_RATES_OVERRIDE = [300, 240, 190, 155, 115];
+const ENEMY_RATES_OVERRIDE = [260, 210, 165, 130, 95];
 
 const KNIGHT_COLORS = { blue:'#3b82f6', red:'#ef4444', yellow:'#eab308', green:'#22c55e', purple:'#a855f7' };
 const KNIGHT_PLUME  = { blue:'#60a5fa', red:'#fca5a5', yellow:'#fde68a', green:'#86efac', purple:'#d8b4fe' };
@@ -179,68 +179,78 @@ const KNIGHT_DARK   = { blue:'#1d4ed8', red:'#991b1b', yellow:'#92400e', green:'
 
 const LEVELS = [
   {
-    id:1, name:'Enchanted Meadow',
-    sky:['#87ceeb','#c8f0a0'], ground:'#3d6b30', groundTop:'#5cb84a',
-    wallColor:'#7a5c10', platformColor:'#6a4c08',
-    tip:'Tap ↑ to jump, hold ↑ to fly. SPACE fires rainbows, hold SPACE to charge!',
-    chargeTip:'⚡ Hold SPACE to charge the Rainbow Beam — release for a huge blast!',
-    enemyTypes:['troll_sword','troll_archer','troll_sword'],
-    bossType:'troll_boss', bossHp:22,
-    worldLen:5000, wallGap:600, wallFreq:0.10,
-    knightColor:'blue',
+    id:1, name:'Sunlit Meadow',
+    sky:['#7ec8e3','#b0e8b0'], ground:'#4a8c3f', groundTop:'#6dbf5a',
+    wallColor:'#8b6914', platformColor:'#a0812a',
+    tip:'Tap to jump, hold to fly. SPACE fires rainbows, hold for charge beam!',
+    chargeTip:'Hold SPACE to charge the Rainbow Beam!',
+    enemyTypes:['goblin_sword','goblin_archer','goblin_sword','goblin_archer','goblin_medium','goblin_sword'],
+    bossType:'goblin_chief', bossHp:30,
+    worldLen:4800, wallGap:580, wallFreq:0.09,
+    allyType:'blue_knight',
     scenery:['flowers','hay','treeline','hill','flowers','treeline'],
+    hasCastle:true, castleTheme:'meadow',
+    groundDetail:'grass',
   },
   {
-    id:2, name:'Dark Mushroom Forest',
-    sky:['#1a1040','#2d1860'], ground:'#241408', groundTop:'#4a3018',
-    wallColor:'#3a2008', platformColor:'#2a1404',
-    tip:'Winged ladies throw aimed javelins! Use shield to deflect.',
-    chargeTip:'⚡ Charge beam destroys groups of enemies in one shot!',
-    enemyTypes:['troll_sword','troll_archer','troll_javelin','winged_lady','troll_sword'],
-    bossType:'witch_boss', bossHp:35,
-    worldLen:5500, wallGap:520, wallFreq:0.11,
-    knightColor:'red',
+    id:2, name:'Whispering Mushroom Wood',
+    sky:['#2a1a5e','#4a2878'], ground:'#2a1a08', groundTop:'#5a3a18',
+    wallColor:'#4a2808', platformColor:'#3a1e06',
+    tip:'Spore puffers explode on contact — shoot them from afar!',
+    chargeTip:'Charge beam clears clusters of spore puffers!',
+    enemyTypes:['spore_puffer','goblin_archer','goblin_sword','spore_puffer','goblin_medium','winged_lady','goblin_archer'],
+    bossType:'mushroom_witch', bossHp:48,
+    worldLen:5800, wallGap:500, wallFreq:0.10,
+    allyType:'villager',
     scenery:['mushroom','darkTree','glowBug','fog','mushroom','darkTree'],
+    hasCastle:true, castleTheme:'dark',
+    groundDetail:'mushroom',
   },
   {
-    id:3, name:'Volcanic Mountain Pass',
-    sky:['#3d0000','#7c1414'], ground:'#280800', groundTop:'#7a3200',
-    wallColor:'#4a1800', platformColor:'#3a1000',
-    tip:'Lava river ahead! Use the bridge. Lava creatures throw lava blobs!',
-    chargeTip:'⚡ Rainbow Beam goes through multiple enemies!',
-    enemyTypes:['troll_sword','troll_axe','troll_archer','winged_lady','boulder','troll_sword','troll_axe'],
-    bossType:'dragon_boss', bossHp:50,
-    worldLen:6000, wallGap:500, wallFreq:0.10,
-    knightColor:'yellow',
+    id:3, name:'Volcanic Pass',
+    sky:['#5c1a00','#8c2a00'], ground:'#2c0a00', groundTop:'#7a3200',
+    wallColor:'#5a1c00', platformColor:'#4a1400',
+    tip:'Rock golems take more hits. Lava river ahead — use the bridge!',
+    chargeTip:'Rainbow Beam melts rock golems in one hit!',
+    enemyTypes:['rock_golem','fire_imp','goblin_archer','rock_golem','goblin_medium','boulder','fire_imp'],
+    bossType:'lava_dragon', bossHp:65,
+    worldLen:6400, wallGap:480, wallFreq:0.09,
+    allyType:'elf_archer',
     scenery:['lava','volcano','ashCloud','rockSpire','lava','ashCloud'],
+    hasCastle:true, castleTheme:'volcanic',
+    groundDetail:'scorched',
     hasLavaRiver:true,
     lavaStreams:3,
   },
   {
-    id:4, name:'Ice Crystal Cavern',
-    sky:['#08182e','#0d2a6a'], ground:'#081420', groundTop:'#1a3460',
-    wallColor:'#183460', platformColor:'#0d2450',
-    tip:'Ice trolls are quicker. Fly above and drop rainbows from above!',
-    chargeTip:'⚡ Fully charged beam freezes groups solid!',
-    enemyTypes:['troll_sword','troll_axe','troll_archer','troll_javelin','winged_lady','troll_sword','troll_axe'],
-    bossType:'ice_boss', bossHp:65,
-    worldLen:6500, wallGap:520, wallFreq:0.10,
-    knightColor:'green',
+    id:4, name:'Frost Crystal Caverns',
+    sky:['#0a1e3a','#0d2e6a'], ground:'#06101a', groundTop:'#1a3c6a',
+    wallColor:'#1a3c6a', platformColor:'#102a58',
+    tip:'Yetis charge fast — dodge sideways. Ice shards float and fire bolts!',
+    chargeTip:'Beam shatters ice and chains to nearby enemies!',
+    enemyTypes:['yeti','ice_archer','ice_shard','yeti','goblin_medium','shadow_knight','ice_shard'],
+    bossType:'ice_queen', bossHp:80,
+    worldLen:7000, wallGap:500, wallFreq:0.09,
+    allyType:'red_knight',
     scenery:['icicle','icePillar','frozenPond','snowfall','icicle','icePillar'],
-    lavaStreams:2,
+    hasCastle:true, castleTheme:'ice',
+    groundDetail:'ice',
+    lavaStreams:0,
   },
   {
-    id:5, name:"Evil King's Dark Fortress",
-    sky:['#08000e','#180028'], ground:'#080010', groundTop:'#200030',
-    wallColor:'#220834', platformColor:'#180622',
-    tip:'The Evil King rides a black dragon — strike fast and hard!',
-    chargeTip:'⚡ Max-charge beam can pierce the Evil King\'s shield!',
-    enemyTypes:['troll_sword','troll_axe','troll_archer','troll_javelin','winged_lady','troll_sword','troll_axe','winged_lady'],
-    bossType:'evil_king', bossHp:150,
-    worldLen:7000, wallGap:480, wallFreq:0.10,
-    knightColor:'purple',
+    id:5, name:'Shadow Fortress',
+    sky:['#05000a','#12001e'], ground:'#05000a', groundTop:'#1e0030',
+    wallColor:'#240840', platformColor:'#180628',
+    tip:'The Evil King rides a shadow dragon. Free the prisoner at the end!',
+    chargeTip:'Fully charged beam can stagger the Evil King!',
+    enemyTypes:['shadow_knight','goblin_archer','fire_imp','shadow_knight','goblin_medium','fire_imp','ice_shard','shadow_knight'],
+    bossType:'evil_king', bossHp:160,
+    worldLen:7600, wallGap:460, wallFreq:0.09,
+    allyType:'royal_father',
     scenery:['darkPillar','gargoyle','boneGround','torchLight','darkPillar','gargoyle'],
-    lavaStreams:4,
+    hasCastle:true, castleTheme:'shadow',
+    groundDetail:'dark',
+    lavaStreams:3,
   },
 ];
 
@@ -250,10 +260,11 @@ let enemies=[], projectiles=[], particles=[], walls=[], platforms=[], sceneryIte
 let boss=null, enemySpawnTimer=0;
 // Single knight for current level (legacy), plus persistent array of all freed knights
 let knight = null;
-let allKnights = [];  // persists across levels: [{x,y,state,color,id,animT,animF,facing}]
+let allKnights = [];  // persists across levels
+let savedKnights = []; // snapshot of knights at the START of current level (for retry)
 
 // Charge beam state
-let chargeBeam = { charging:false, level:0, maxLevel:180, firing:false, fireTimer:0 };
+let chargeBeam = { charging:false, level:0, maxLevel:180, firing:false, fireTimer:0, cooldown:0, cooldownMax:220 };
 
 function makeP1(x,y){
   return {
@@ -285,10 +296,13 @@ function diffRateDiv(){ return difficulty==='easy'?1.7:difficulty==='hard'?0.65:
 
 function makeBoss(type, x, cfg){
   const hpMult = diffMult();
+  // Scale HP by number of freed knights (each knight adds 20%, up to +100%)
+  const knightBonus = 1 + Math.min(allKnights.length, 5) * 0.20;
+  const totalHp = Math.ceil(cfg.bossHp * hpMult * knightBonus);
   return {
     type, x, y:GROUND-(type==='evil_king'?120:100),
     w:type==='evil_king'?100:88, h:type==='evil_king'?120:100,
-    hp:Math.ceil(cfg.bossHp*hpMult), maxHp:Math.ceil(cfg.bossHp*hpMult),
+    hp:totalHp, maxHp:totalHp,
     vx:0, vy:0, onGround:false,
     animT:0, animF:0,
     shootCool:0, shootRate:75,
@@ -307,8 +321,8 @@ function generateLevel(lv){
   knight=null;
   // allKnights persists across levels
   levelWorldLen = cfg.worldLen;
-  worldX = 0; enemySpawnTimer = 0;
-  chargeBeam = { charging:false, level:0, maxLevel:180, firing:false, fireTimer:0 };
+  worldX = 0; enemySpawnTimer = 0; mediumTrollTimer = 0;
+  chargeBeam = { charging:false, level:0, maxLevel:180, firing:false, fireTimer:0, cooldown:0, cooldownMax:220 };
 
   // ── Platforms (floating stepping stones) ──
   let px = 450;
@@ -328,15 +342,34 @@ function generateLevel(lv){
     }
     wx += cfg.wallGap + Math.floor(Math.random()*300);
   }
-  // Boss-arena cover (just 2 walls)
-  walls.push({ x:levelWorldLen-580, y:GROUND-70, w:22, h:70+60, cover:true });
-  walls.push({ x:levelWorldLen-380, y:GROUND-70, w:22, h:70+60, cover:true });
+  // Boss arena — just one low cover rock for the player to duck behind
+  walls.push({ x:levelWorldLen-620, y:GROUND-55, w:28, h:55+60, cover:true });
 
-  // Knight cage
-  walls.push({ x:levelWorldLen-320, y:GROUND-140, w:66, h:140+60, isCage:true });
+  // Knight cage at the far end
+  walls.push({ x:levelWorldLen-210, y:GROUND-300, w:80, h:300+60, isCage:true });
 
   // ── Scenery (visual variety — rivers, trees, rocks, etc.) ──
   generateScenery(lv, cfg);
+
+  // ── Castle landmark — placed about 60% through the level ──
+  if(cfg.hasCastle){
+    const castleX = Math.floor(levelWorldLen * 0.58);
+    sceneryItems.push({ x:castleX, y:GROUND, type:'castle', seed:Math.random(), theme:cfg.castleTheme||'meadow', big:true });
+
+    // Castle interior: add a floor platform inside the main gatehouse
+    // The gatehouse arch starts at roughly castleX + cw*0.37 (cw=320) = +118
+    // and extends ~84px wide. Floor is partway up = GROUND - 80
+    const gateX = castleX + 100;
+    const gateW = 120;
+    // Ground floor interior (player can walk inside)
+    platforms.push({ x:gateX, y:GROUND-2, w:gateW, h:8, isCastleFloor:true });
+    // Upper balcony platform
+    platforms.push({ x:gateX+14, y:GROUND-90, w:gateW-28, h:10, isCastleFloor:true });
+    // Left tower interior floor
+    platforms.push({ x:castleX+4,  y:GROUND-2, w:62, h:8, isCastleFloor:true });
+    // Right tower interior floor
+    platforms.push({ x:castleX+254, y:GROUND-2, w:62, h:8, isCastleFloor:true });
+  }
 
   // ── Lava river with rope bridge ──
   if(cfg.hasLavaRiver){
@@ -374,11 +407,13 @@ function generateScenery(lv, cfg){
 }
 
 // ── ENEMY SPAWN ───────────────────────────────────────
+let mediumTrollTimer = 0;
 function spawnEnemies(){
   if(bossSpawned) return;
   enemySpawnTimer++;
   const baseRate = (typeof ENEMY_RATES_OVERRIDE!=="undefined") ? ENEMY_RATES_OVERRIDE[curLevel-1] : ENEMY_RATES[curLevel-1];
-  const rate = Math.floor(baseRate * diffRateDiv());
+  const twoPlayerBonus = numPlayers===2 ? 0.65 : 1.0; // 35% faster spawns in 2P
+  const rate = Math.floor(baseRate * diffRateDiv() * twoPlayerBonus);
   if(enemySpawnTimer < rate) return;
   enemySpawnTimer = 0;
 
@@ -386,26 +421,82 @@ function spawnEnemies(){
   if(pWX > levelWorldLen - 1200) return;
 
   const cfg = LEVELS[curLevel-1];
+
+  // 30% chance: place on a visible platform ahead
+  if(Math.random()<0.30){
+    const nearby = platforms.filter(pl=>{
+      const plsx = pl.x - worldX;
+      return plsx > W && plsx < W+320 && !pl.isBridge;
+    });
+    if(nearby.length>0){
+      const pl = nearby[Math.floor(Math.random()*nearby.length)];
+      const groundTypes=['goblin_sword','goblin_archer','troll_sword','troll_archer',
+                         'ice_archer','rock_golem','yeti','shadow_knight','goblin_medium','troll_medium'];
+      const validTypes = groundTypes.filter(t2=>cfg.enemyTypes.includes(t2));
+      if(validTypes.length>0){
+        const t2 = validTypes[Math.floor(Math.random()*validTypes.length)];
+        spawnEnemyAt(t2, pl.x+pl.w/2-18, pl.y, true);
+        // also do normal ground spawn
+      }
+    }
+  }
+
   const t = cfg.enemyTypes[Math.floor(Math.random()*cfg.enemyTypes.length)];
   spawnEnemy(t, worldX + W + 60);
+
+  mediumTrollTimer++;
+  if(mediumTrollTimer >= 520 - curLevel*40){
+    mediumTrollTimer = 0;
+    spawnEnemy('troll_medium', worldX + W + 80);
+  }
+}
+
+// Spawn an enemy at a specific world position and Y (for platforms)
+function spawnEnemyAt(type, worldPosX, platformY, onPlatform){
+  spawnEnemy(type, worldPosX);
+  const e = enemies[enemies.length-1];
+  if(e && onPlatform){
+    e.y = platformY - e.h;
+    e.onPlatform = true;
+    e.platformY = platformY;
+    e.onGround = true;
+    e.vx = 0; // stand still on platform (don't walk off)
+  }
 }
 function spawnEnemy(type, worldPosX){
   const e = {
-    type, worldX:worldPosX, y:GROUND-52, w:36, h:52,
-    vx:-1.4-(curLevel-1)*0.18, vy:0, onGround:false,
+    type, worldX:worldPosX, y:GROUND-56, w:36, h:56,
+    vx:-1.4-(curLevel-1)*0.18, vy:0.1, onGround:false,
     hp:1, maxHp:1, alive:true,
     animT:0, animF:0, facing:-1,
     shootCool:0, aiTimer:0,
   };
-  // Toned-down HP values (easier)
   switch(type){
-    case 'troll_sword':  e.hp=1+Math.ceil(curLevel*0.6); e.maxHp=e.hp; break;
-    case 'troll_axe':    e.hp=2+Math.ceil(curLevel*0.6); e.maxHp=e.hp; e.w=38; e.h=54; break;
-    case 'troll_archer': e.hp=1+Math.floor(curLevel*0.5); e.maxHp=e.hp; e.shootRate=110; break;
-    case 'troll_javelin':e.hp=1+Math.floor(curLevel*0.5); e.maxHp=e.hp; e.shootRate=130; break;
-    case 'winged_lady':  e.hp=2+curLevel; e.maxHp=e.hp; e.y=GROUND-180-Math.random()*60; e.w=36; e.h=48;
-                         e.wobble=Math.random()*Math.PI*2; e.shootRate=85+Math.random()*30; e.vx=-(1.0+curLevel*0.1); break;
-    case 'boulder':      e.hp=1; e.maxHp=1; e.y=GROUND-200-Math.random()*50; e.w=28; e.h=28; e.vy=1.5; break;
+    // Meadow goblins
+    case 'goblin_sword':  e.hp=1+Math.ceil(curLevel*0.5); e.maxHp=e.hp; e.w=32; e.h=72; e.y=GROUND-72; e.vy=0.1; break;
+    case 'goblin_archer': e.hp=1+Math.floor(curLevel*0.4); e.maxHp=e.hp; e.shootRate=80; e.w=32; e.h=72; e.y=GROUND-72; e.vy=0.1; break;
+    // Forest creatures
+    case 'spore_puffer':  e.hp=1; e.maxHp=1; e.w=34; e.h=34; e.y=GROUND-34; e.wobble=Math.random()*Math.PI*2; break;
+    case 'goblin_medium': e.hp=2+Math.ceil(curLevel*0.7); e.maxHp=e.hp; e.w=46; e.h=84; e.y=GROUND-84; e.vy=0.1; break;
+    // Volcanic enemies
+    case 'rock_golem':    e.hp=3+curLevel; e.maxHp=e.hp; e.w=44; e.h=80; e.y=GROUND-80; e.vy=0.1; break;
+    case 'fire_imp':      e.hp=1+curLevel; e.maxHp=e.hp; e.y=GROUND-160-Math.random()*60; e.w=30; e.h=38;
+                          e.wobble=Math.random()*Math.PI*2; e.shootRate=75; e.vx=-(1.2+curLevel*0.1); break;
+    case 'boulder':       e.hp=1; e.maxHp=1; e.y=GROUND-200-Math.random()*50; e.w=28; e.h=28; e.vy=1.5; break;
+    // Ice creatures
+    case 'yeti':          e.hp=2+Math.ceil(curLevel*0.8); e.maxHp=e.hp; e.w=48; e.h=88; e.y=GROUND-88; e.vy=0.1; break;
+    case 'ice_archer':    e.hp=1+Math.floor(curLevel*0.4); e.maxHp=e.hp; e.shootRate=90; e.w=32; e.h=72; e.y=GROUND-72; e.vy=0.1; break;
+    case 'ice_shard':     e.hp=1; e.maxHp=1; e.y=GROUND-180-Math.random()*50; e.w=22; e.h=32;
+                          e.wobble=Math.random()*Math.PI*2; e.shootRate=65; e.vx=-(1.0+curLevel*0.1); break;
+    // Shadow enemies
+    case 'shadow_knight': e.hp=2+Math.ceil(curLevel*0.7); e.maxHp=e.hp; e.w=38; e.h=78; e.y=GROUND-78; e.vy=0.1; break;
+    // Legacy cross-level
+    case 'troll_sword':   e.hp=1+Math.ceil(curLevel*0.5); e.maxHp=e.hp; e.w=32; e.h=72; e.y=GROUND-72; e.vy=0.1; break;
+    case 'troll_axe':     e.hp=2+Math.ceil(curLevel*0.5); e.maxHp=e.hp; e.w=38; e.h=54; break;
+    case 'troll_archer':  e.hp=1+Math.floor(curLevel*0.4); e.maxHp=e.hp; e.shootRate=80; e.h=72; e.y=GROUND-72; e.vy=0.1; break;
+    case 'winged_lady':   e.hp=2+curLevel; e.maxHp=e.hp; e.y=GROUND-180-Math.random()*60; e.w=36; e.h=48;
+                          e.wobble=Math.random()*Math.PI*2; e.shootRate=70; e.vx=-(1.0+curLevel*0.1); break;
+    case 'troll_medium':  e.hp=2+Math.ceil(curLevel*0.8); e.maxHp=e.hp; e.w=48; e.h=82; e.y=GROUND-82; e.vy=0.1; break;
   }
   enemies.push(e);
 }
@@ -513,26 +604,33 @@ function updateP1(){
     p1.x+=sc; p1.x=Math.min(W-p1.w-2,p1.x);
   }
 
-  // ── CHARGE BEAM ──
+  // ── SHOOT LOGIC ──
+  // Cooldown only blocks the charge beam, never the rainbow
+  if(chargeBeam.cooldown>0) chargeBeam.cooldown--;
+
   if(p1Fire()&&!p1.shielding){
-    if(!chargeBeam.charging) chargeBeam.charging=true;
-    chargeBeam.level=Math.min(chargeBeam.maxLevel, chargeBeam.level+1.4);
+    // Only charge if cooldown has expired
+    if(chargeBeam.cooldown<=0){
+      if(!chargeBeam.charging) chargeBeam.charging=true;
+      chargeBeam.level=Math.min(chargeBeam.maxLevel, chargeBeam.level+1.4);
+    } else {
+      // Cooldown active — fire plain rainbow every tap (justPressed so no spam)
+      if(justPressed('Space')){
+        fireRainbow(p1);
+      }
+    }
   } else if(chargeBeam.charging){
-    // Released — fire!
+    // Key released while charging
     chargeBeam.charging=false;
     if(chargeBeam.level>20){
       fireChargeBeam(p1, chargeBeam.level);
-    } else if(chargeBeam.level>0){
-      // Small tap = regular shot
-      if(p1.shootCool<=0){
-        fireRainbow(p1);
-        p1.shootCool=p1.shootRate;
-      }
+      chargeBeam.cooldown=chargeBeam.cooldownMax;
+    } else {
+      // Was a tap, not a hold — fire rainbow, no cooldown
+      fireRainbow(p1);
     }
     chargeBeam.level=0;
   }
-  // Auto-fire small rainbows while not charging (tap)
-  if(!chargeBeam.charging){ if(p1.shootCool>0) p1.shootCool--; }
 
   // Animate
   p1.animT++; if(p1.animT>7){p1.animT=0;p1.animF=(p1.animF+1)%4;}
@@ -676,11 +774,33 @@ function setPlayers(n, btn){
 
 // ── PROJECTILES ───────────────────────────────────────
 const RAINBOW_COLS=['#ff4466','#ff8800','#ffee00','#44ee88','#44aaff','#aa44ff','#ff44cc'];
+// ── CARTOON DRAWING HELPERS ──────────────────────────
+function cRR(x,y,w,h,r,fill,stroke,lw){
+  ctx.beginPath();
+  r=Math.min(r,w/2,h/2);
+  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||2;ctx.stroke();}
+}
+function cEl(x,y,rx,ry,fill,stroke,lw){
+  ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||2;ctx.stroke();}
+}
+function drawHPBar(x,y,w,hp,maxHp,col){
+  col=col||'#44bb22';
+  ctx.fillStyle='rgba(0,0,0,0.55)';cRR(x,y,w,7,3,null,null);ctx.fill();
+  const pct=Math.max(0,hp/maxHp);
+  ctx.fillStyle=col;cRR(x,y,pct*w,7,3,null,null);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.lineWidth=1;cRR(x,y,w,7,3,null,null);ctx.stroke();
+}
+
 
 function fireRainbow(pl){
   projectiles.push({
     kind:'rainbow',owner:'p1',
-    x:pl.x+(pl.facing>0?pl.w:0), y:pl.y+14,
+    x:pl.x+(pl.facing>0?pl.w:0), y:pl.y+8,
     vx:pl.facing*5.5, vy:-0.2,
     w:20, h:10, alive:true, colorT:0, colorIdx:0,
   });
@@ -709,6 +829,7 @@ function fireChargeBeam(pl, chargeLevel){
     w:beamW, h:beamH,
     alive:true, colorT:0, colorIdx:0,
     power, pierce,
+    pierceLeft:2, // max 2 enemies pierced
     damage: Math.max(2, Math.ceil(power*4)),
     t:0,
   });
@@ -753,58 +874,94 @@ function updateEnemies(){
     const tx=nearPl?nearPl.x:300;
     const dist=Math.abs(sx-tx);
 
+    // ── Aerial enemies ──
+    const isAerial = e.type==='fire_imp'||e.type==='ice_shard'||e.type==='winged_lady';
+    if(isAerial){
+      e.wobble=(e.wobble||0)+0.045;
+      e.y=Math.max(GROUND-280,Math.min(GROUND-70,e.y+Math.sin(e.wobble)*2.4));
+      e.vx=sx>tx+60?-(1.5+curLevel*0.12):(sx<tx-20?0.5:0);
+      e.worldX+=e.vx; e.facing=e.vx<0?-1:1;
+      e.shootCool++;
+      if(e.shootCool>=(e.shootRate||85)&&dist<500&&nearPl){
+        e.shootCool=0;
+        const dx=nearPl.x-sx, dy=(nearPl.y+nearPl.h*0.4)-e.y;
+        const len=Math.sqrt(dx*dx+dy*dy)||1;
+        const spd=6+curLevel*0.3;
+        const kind=e.type==='ice_shard'?'iceshard':(e.type==='fire_imp'?'fireball':'javelin');
+        fireEnemyShot(e,kind,(dx/len)*spd,(dy/len)*spd*0.65);
+      }
+      e.animT++;if(e.animT>5){e.animT=0;e.animF=(e.animF+1)%2;}
+      return;
+    }
     if(e.type==='boulder'){
       e.vy=Math.min(e.vy+GRAVITY,MAX_FALL); e.y+=e.vy; e.worldX+=e.vx;
       if(e.y+e.h>=GROUND){e.alive=false;spawnSmoke(sx,GROUND-10,6);}
       targets.forEach(pl=>{if(Math.abs(pl.x-sx)<40&&Math.abs(pl.y-e.y)<40&&pl.invincible<=0&&!pl.shielding)hitPlayer(pl,1);});
       return;
     }
-    if(e.type==='winged_lady'){
-      // Bat-winged woman who flies up/down and hurls aimed javelins
-      e.wobble=(e.wobble||0)+0.042;
-      e.y=Math.max(GROUND-280,Math.min(GROUND-70,e.y+Math.sin(e.wobble)*2.4));
-      e.vx=sx>tx+60?-(1.5+curLevel*0.12):(sx<tx-20?0.5:0);
+    if(e.type==='spore_puffer'){
+      e.wobble=(e.wobble||0)+0.09;
+      const bounce=Math.abs(Math.sin(e.wobble))*28;
+      e.y=GROUND-e.h-bounce;
+      e.vx=dist>50?-(1.2+curLevel*0.12):0;
       e.worldX+=e.vx; e.facing=e.vx<0?-1:1;
-      e.shootCool++;
-      if(e.shootCool>=(e.shootRate||90)&&dist<440&&nearPl){
-        e.shootCool=0;
-        // Aim javelin toward nearest player with predictive lead
-        const dx=nearPl.x-sx, dy=(nearPl.y+nearPl.h*0.4)-e.y;
-        const len=Math.sqrt(dx*dx+dy*dy)||1;
-        const spd=6+curLevel*0.3;
-        fireEnemyShot(e,'javelin',(dx/len)*spd,(dy/len)*spd*0.65);
-      }
+      targets.forEach(pl=>{
+        if(pl.invincible<=0&&Math.abs((e.worldX-worldX)-pl.x)<36&&Math.abs(e.y-pl.y)<38){
+          hitPlayer(pl,1);e.alive=false;bigExplosion(e.worldX-worldX,e.y);
+        }
+      });
       e.animT++;if(e.animT>5){e.animT=0;e.animF=(e.animF+1)%2;}
       return;
     }
-    // Ground troll
+    // Ground enemies — always apply gravity, land on GROUND or any platform
     applyGravity(e); e.y+=e.vy;
-    if(e.y+e.h>=GROUND){e.y=GROUND-e.h;e.vy=0;e.onGround=true;}
-    e.vx=dist>65?-(1.4+curLevel*0.15):0;
+    e.onGround=false;
+    // Check GROUND
+    if(e.y+e.h>=GROUND){e.y=GROUND-e.h;e.vy=0;e.onGround=true;e.onPlatform=false;}
+    // Check platforms
+    if(!e.onGround){
+      platforms.forEach(pl=>{
+        const plsx=pl.x-worldX;
+        const esx=e.worldX-worldX;
+        if(esx<plsx+pl.w&&esx+e.w>plsx&&e.y+e.h>=pl.y&&e.y+e.h<=pl.y+pl.h+10&&e.vy>=0){
+          e.y=pl.y-e.h;e.vy=0;e.onGround=true;
+          e.onPlatform=true;e.platformY=pl.y;
+        }
+      });
+    }
+    // If enemy walked off a platform edge, clear platform flag so gravity pulls them down
+    if(e.onPlatform&&!e.onGround){e.onPlatform=false;e.platformY=null;}
+    const isSlow=e.type==='rock_golem'||e.type==='yeti';
+    e.vx=dist>65?-(isSlow?0.9+curLevel*0.08:1.4+curLevel*0.15):0;
     e.worldX+=e.vx; e.facing=e.vx<0?-1:1;
     wallCheckEnemy(e);
-    if(e.type==='troll_archer'&&dist<400&&e.onGround){
+    // Ranged attacks
+    const isArcher=e.type==='goblin_archer'||e.type==='troll_archer'||e.type==='ice_archer';
+    if(isArcher&&dist<600&&e.onGround){
       e.shootCool++;
-      if(e.shootCool>=(e.shootRate||110)){
+      if(e.shootCool>=(e.shootRate||100)){
         e.shootCool=0;
-        // Aim arrow toward player (account for Y difference)
         if(nearPl){
           const adx=nearPl.x-sx, ady=(nearPl.y+20)-e.y;
           const alen=Math.sqrt(adx*adx+ady*ady)||1;
-          const aspd=6.5;
-          fireEnemyShot(e,'arrow',(adx/alen)*aspd,(ady/alen)*aspd*0.55);
+          const kind=e.type==='ice_archer'?'iceshard':'arrow';
+          fireEnemyShot(e,kind,(adx/alen)*7,(ady/alen)*7*0.55);
         }
       }
     }
-    if(e.type==='troll_javelin'&&dist<360&&e.onGround){
+    if(e.type==='troll_javelin'&&dist<560&&e.onGround){
       e.shootCool++;
-      if(e.shootCool>=(e.shootRate||130)){
+      if(e.shootCool>=(e.shootRate||120)){
         e.shootCool=0;
         const dir=sx>tx?-1:1;
         fireEnemyShot(e,'javelin',dir*5.5,-2.8);
       }
     }
-    if((e.type==='troll_sword'||e.type==='troll_axe')&&dist<52){
+    // Melee attacks
+    const isMelee=e.type==='goblin_sword'||e.type==='troll_sword'||e.type==='troll_axe'||
+                  e.type==='goblin_medium'||e.type==='rock_golem'||e.type==='yeti'||
+                  e.type==='shadow_knight'||e.type==='troll_medium';
+    if(isMelee&&dist<60){
       targets.forEach(pl=>{if(pl.invincible<=0&&!pl.shielding)hitPlayer(pl,1);});
     }
     e.animT++;if(e.animT>8){e.animT=0;e.animF=(e.animF+1)%2;}
@@ -815,52 +972,82 @@ function updateEnemies(){
 // ── BOSS UPDATE ───────────────────────────────────────
 function updateBoss(){
   if(!boss||!boss.alive) return;
-  const b=boss;
+  const b=boss; b.shielding=false; // no shield
   const bsx=b.x-worldX;
-  b.enraged=b.hp<b.maxHp*0.35;
-  const spd=b.enraged?2.4+curLevel*0.25:1.5+curLevel*0.15;
+  b.enraged=b.hp<b.maxHp*0.4;
+  const spd=b.enraged?3.0+curLevel*0.25:2.0+curLevel*0.18;
 
   b.patternTimer++;
-  const pDur=b.enraged?70:110;
-  if(b.patternTimer>pDur){
-    b.patternTimer=0; b.pattern=(b.pattern+1)%3;
-    // Only raise shield if still has shield hits remaining
-    if(b.pattern===0 && b.shieldHitsLeft>0) b.shielding=true;
-  }
+  if(b.patternTimer>(b.enraged?50:80)){b.patternTimer=0;b.pattern=(b.pattern+1)%4;}
 
   const targets=[p1,p2].filter(p=>p&&!p.dead);
   if(!targets.length) return;
-  // Chase the CLOSEST player to the boss
-  const pl=targets.reduce((closest,t)=>{
-    return Math.abs((t.x)-(bsx+b.w/2)) < Math.abs((closest.x)-(bsx+b.w/2)) ? t : closest;
-  }, targets[0]);
-  const dist=bsx-pl.x;
-  if(Math.abs(dist)>130) b.vx=dist>0?-spd:spd; else b.vx*=0.8;
-  b.x+=b.vx; b.facing=b.vx<0?-1:1;
-  b.x=Math.max(worldX+10,Math.min(worldX+W-b.w-10,b.x));
+  const pl=targets.reduce((cl,t)=>Math.abs(t.x-(bsx+b.w/2))<Math.abs(cl.x-(bsx+b.w/2))?t:cl,targets[0]);
+  const distX=bsx+b.w/2-pl.x-pl.w/2;
+  const distAbs=Math.abs(distX);
 
-  if(b.type==='witch_boss'||b.type==='ice_boss'){
-    b.y=GROUND-b.h-50+Math.sin(gFrame*0.04)*26;
+  // Movement — always active, pattern-based
+  if(b.pattern===0){
+    b.vx=distX>0?-spd*1.2:spd*1.2;
+  } else if(b.pattern===1){
+    const ideal=200; b.vx=distAbs>ideal+40?(distX>0?-spd:spd):(distAbs<ideal-40?(distX>0?spd*0.8:-spd*0.8):b.vx*0.85);
+  } else if(b.pattern===2){
+    b.vx=distX>0?spd*0.6:-spd*0.6; // orbit
+  } else {
+    b.vx=b.enraged?(distX>0?-spd*1.8:spd*1.8):(distX>0?-spd:spd); // dash
+  }
+  b.x+=b.vx; b.facing=b.vx<0?-1:1;
+  b.x=Math.max(worldX+20,Math.min(worldX+W-b.w-20,b.x));
+
+  // Vertical
+  const isFloat=b.type==='mushroom_witch'||b.type==='ice_queen';
+  if(isFloat){
+    b.y=GROUND-b.h-55+Math.sin(gFrame*0.045)*32;
   } else {
     b.vy=Math.min(b.vy+GRAVITY,MAX_FALL); b.y+=b.vy;
     if(b.y+b.h>=GROUND){b.y=GROUND-b.h;b.vy=0;}
+    if(b.enraged&&b.y+b.h>=GROUND&&b.pattern===3)b.vy=-12;
   }
 
+  // Shooting
   b.shootCool++;
-  const rate=b.enraged?Math.max(28,b.shootRate*0.45):b.shootRate;
-  if(b.shootCool>=rate&&!b.shielding){
+  const rate=b.enraged?Math.max(20,b.shootRate*0.4):b.shootRate;
+  if(b.shootCool>=rate){
     b.shootCool=0;
     const dx=pl.x+pl.w/2-(bsx+b.w/2), dy=pl.y+pl.h/2-(b.y+b.h/2);
     const len=Math.sqrt(dx*dx+dy*dy)||1;
     const shots=b.enraged?2:1;
-    for(let s=0;s<shots;s++){
-      const spread=(s-(shots-1)/2)*0.22;
-      fireBossShot(b,(dx/len)*6.5+spread,(dy/len)*4.5);
-    }
-    if(b.type==='evil_king'&&gFrame%200===0){
-      for(let i=0;i<3;i++) fireBossShot(b,(b.facing<0?-1:1)*5+i*1.5-1.5,-8,'rock');
+    if(b.type==='goblin_chief'){
+      for(let s=0;s<shots;s++) fireBossShot(b,(dx/len)*6.5+(s-(shots-1)/2)*0.3,(dy/len)*5,'rock');
+      if(b.enraged) fireBossShot(b,(dx/len)*9,(dy/len)*6,'bossshot');
+    } else if(b.type==='mushroom_witch'){
+      const fc=b.enraged?5:3;
+      for(let i=0;i<fc;i++){const a=Math.atan2(dy,dx)+(i-(fc-1)/2)*0.3;fireBossShot(b,Math.cos(a)*7,Math.sin(a)*5,'spore');}
+    } else if(b.type==='lava_dragon'){
+      for(let s=0;s<shots;s++) fireBossShot(b,(dx/len)*8+(s-(shots-1)/2)*0.25,(dy/len)*6,'fireball');
+      if(b.enraged&&gFrame%90===0) for(let i=0;i<5;i++){const a=Math.atan2(dy,dx)+(i-2)*0.22;fireBossShot(b,Math.cos(a)*9,Math.sin(a)*6,'fireball');}
+    } else if(b.type==='ice_queen'){
+      const fc=b.enraged?4:2;
+      for(let i=0;i<fc;i++){const a=Math.atan2(dy,dx)+(i-(fc-1)/2)*0.35;fireBossShot(b,Math.cos(a)*7.5,Math.sin(a)*5.5,'iceshard');}
+      if(b.enraged&&gFrame%120===0) for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2;fireBossShot(b,Math.cos(a)*6,Math.sin(a)*6,'iceshard');}
+    } else if(b.type==='evil_king'){
+      for(let s=0;s<shots;s++) fireBossShot(b,(dx/len)*7+(s-(shots-1)/2)*0.22,(dy/len)*5.5,'bossshot');
+      if(b.enraged) fireBossShot(b,(dx/len)*9,(dy/len)*7,'bossshot');
+      if(gFrame%160===0) fireBossShot(b,(b.facing<0?-1:1)*4,-9,'rock');
+    } else {
+      for(let s=0;s<shots;s++) fireBossShot(b,(dx/len)*6.5+(s-(shots-1)/2)*0.22,(dy/len)*4.5,'bossshot');
     }
   }
+
+  // Boss melee damage — if touching a player, hurt them
+  const bsx2=b.x-worldX;
+  [p1,p2].forEach(pl=>{
+    if(!pl||pl.dead||pl.invincible>0) return;
+    if(bsx2<pl.x+pl.w+10&&bsx2+b.w>pl.x-10&&b.y<pl.y+pl.h&&b.y+b.h>pl.y){
+      hitPlayer(pl, b.enraged?2:1);
+    }
+  });
+
   b.animT++;if(b.animT>6){b.animT=0;b.animF=(b.animF+1)%2;}
   if(b.hp<=0){
     b.alive=false; bossDefeated=true;
@@ -870,22 +1057,23 @@ function updateBoss(){
     setTimeout(()=>{ if(curLevel<5) nextLevel(); else showEndScreen(true); },3500);
   }
 }
-
 // ── PROJECTILE UPDATE ────────────────────────────────
 function updateProjectiles(){
   const pls=[p1,p2].filter(p=>p&&!p.dead);
   projectiles.forEach(proj=>{
     if(!proj.alive) return;
     proj.x+=proj.vx; proj.y+=proj.vy; proj.t++;
-    if(proj.kind==='rock'||proj.kind==='lavaBlob') proj.vy=Math.min(proj.vy+0.48,14);
+    if(proj.kind==='rock'||proj.kind==='lavaBlob'||proj.kind==='spore') proj.vy=Math.min(proj.vy+0.38,12);
+    if(proj.kind==='fireball') proj.vy=Math.min(proj.vy+0.12,8);
     if(proj.x<-60||proj.x>W+60||proj.y<-60||proj.y>H+60){proj.alive=false;return;}
-    // Wall hit
+    // Wall collision — player/knight shots blocked, floating boss shots pass through
+    const pierceWalls=proj.owner==='boss'; // boss shots always pierce walls
     let walled=false;
     walls.forEach(wl=>{
-      if(wl.isCage||!proj.alive) return;
-      const sx=wl.x-worldX;
-      if(proj.x<sx+wl.w&&proj.x+proj.w>sx&&proj.y<GROUND&&proj.y+proj.h>wl.y){
-        if(proj.kind!=='beam'){ proj.alive=false; walled=true; spawnSmoke(proj.x,proj.y,4); }
+      if(wl.isCage||!proj.alive||pierceWalls) return;
+      const wsx=wl.x-worldX;
+      if(proj.x<wsx+wl.w&&proj.x+proj.w>wsx&&proj.y<GROUND&&proj.y+proj.h>wl.y){
+        proj.alive=false; walled=true; spawnSmoke(proj.x,proj.y,4);
       }
     });
     if(walled) return;
@@ -899,7 +1087,11 @@ function updateProjectiles(){
         if(proj.x<esx+e.w&&proj.x+proj.w>esx&&proj.y<e.y+e.h&&proj.y+proj.h>e.y){
           const dmg=proj.damage||1;
           e.hp-=dmg;
-          if(proj.kind!=='beam'||(proj.kind==='beam'&&!proj.pierce)){ proj.alive=false; }
+          if(proj.kind!=='beam'){ proj.alive=false; }
+          else if(proj.kind==='beam'){
+            proj.pierceLeft=(proj.pierceLeft||2)-1;
+            if(proj.pierceLeft<=0) proj.alive=false;
+          }
           hitSomething=true;
           spawnHitPtcl(proj.x,proj.y,proj.kind);
           if(e.hp<=0){
@@ -912,23 +1104,12 @@ function updateProjectiles(){
       if(boss&&boss.alive&&proj.alive){
         const bsx=boss.x-worldX;
         if(proj.x<bsx+boss.w&&proj.x+proj.w>bsx&&proj.y<boss.y+boss.h&&proj.y+proj.h>boss.y){
-          if(!boss.shielding){
-            // Cap beam damage vs boss so it can't one-shot
-            let dmg=proj.damage||1;
-            if(proj.kind==='beam') dmg=Math.min(dmg, Math.ceil(boss.maxHp*0.18));
-            boss.hp-=dmg;
-            boss.hp=Math.max(boss.hp,0);
-            if(proj.kind!=='beam') proj.alive=false;
-            spawnHitPtcl(proj.x,proj.y,proj.kind);
-            updateHUD();
-          } else {
-            // Shield absorbs hit but loses a charge
-            boss.shieldHitsLeft--;
-            if(boss.shieldHitsLeft<=0){ boss.shielding=false; }
-            proj.vx*=-0.85; proj.vy=-1.5;
-            spawnHitPtcl(proj.x,proj.y,'shield');
-            if(proj.kind==='beam') proj.alive=false; // beam also stopped by shield
-          }
+          let dmg=proj.damage||1;
+          if(proj.kind==='beam') dmg=Math.min(dmg,Math.ceil(boss.maxHp*0.08));
+          boss.hp=Math.max(0,boss.hp-dmg);
+          if(proj.kind!=='beam') proj.alive=false;
+          spawnHitPtcl(proj.x,proj.y,proj.kind);
+          updateHUD();
         }
       }
     } else {
@@ -1014,49 +1195,104 @@ function updateLavaHazards(){
 // ── KNIGHT UPDATE ────────────────────────────────────
 function initKnight(){
   const cfg=LEVELS[curLevel-1];
-  const color=cfg.knightColor||'blue';
+  const allyType=cfg.allyType||'blue_knight';
   const cage=walls.find(w=>w.isCage);
   const kx=cage ? cage.x - worldX + 20 : W - 320;
-  const k={ x:kx, y:GROUND-66, vx:0, state:'walking', animT:0, animF:0, facing:-1, color, id:curLevel };
+  // Color mapping per ally type
+  const colorMap={blue_knight:'blue',red_knight:'red',green_knight:'green',elf_archer:'green',villager:'brown',royal_father:'gold'};
+  const k={
+    x:kx, y:GROUND-66, vx:0, state:'walking',
+    animT:0, animF:0, facing:-1,
+    allyType, id:curLevel,
+    color:colorMap[allyType]||'blue',
+    persistent:allyType!=='villager', // villagers stay behind, all others follow
+    shootCool:Math.floor(Math.random()*40), meleeCool:0, swordSwing:0,
+  };
   knight=k;
   allKnights.push(k);
 }
 
 function updateKnight(){
   allKnights.forEach((k,ki)=>{
-    k.animT++;
-    if(k.animT>9){k.animT=0;k.animF=(k.animF+1)%4;}
+    k.animT++; if(k.animT>9){k.animT=0;k.animF=(k.animF+1)%4;}
+    if(!k.shootCool) k.shootCool=Math.floor(Math.random()*40);
+    if(!k.meleeCool) k.meleeCool=0;
+    if(!k.swordSwing) k.swordSwing=0;
 
     if(k.state==='riding'){
-      // Level-1 blue knight rides P2 dragon; all others follow P1
-      if(k.id===1 && numPlayers===2 && p2 && !p2.dead){
-        k.x = p2.x + (p2.facing<0 ? 8 : -12);
-        k.y = p2.y - 24;
-        k.facing = p2.facing;
-      } else if(p1 && !p1.dead){
-        // Spread behind princess at different offsets per knight
-        const spread = (ki+1)*28;
-        const behind = p1.facing>0 ? p1.x - spread : p1.x + p1.w + spread - 28;
-        k.x += (behind - k.x) * 0.1;
-        k.y = GROUND - 66;
-        k.facing = (k.x < p1.x + p1.w/2) ? 1 : -1;
+      if(k.id===1&&numPlayers===2&&p2&&!p2.dead){
+        k.x=p2.x+(p2.facing<0?8:-12); k.y=p2.y-24; k.facing=p2.facing;
+      } else if(p1&&!p1.dead){
+        const slot=ki;
+        const side=(slot%2===0)?-1:1;
+        const depth=Math.floor(slot/2+1)*30;
+        const targetX=p1.x+p1.w/2+side*depth-14;
+        k.x+=(targetX-k.x)*0.09;
+        k.y=GROUND-66;
+        k.facing=(k.x<p1.x+p1.w/2)?1:-1;
       }
-      return;
+    } else {
+      k.vx=-1.8; k.x+=k.vx; k.facing=-1; k.y=GROUND-66;
+      if(k.id===1&&numPlayers===2&&p2&&!p2.dead){if(Math.abs(k.x-p2.x)<65)k.state='riding';}
+      else if(p1&&!p1.dead){if(Math.abs(k.x-p1.x)<80)k.state='riding';}
     }
 
-    // Walking — march toward players until close enough to join
-    k.vx = -1.6; k.x += k.vx; k.facing = -1;
-    k.y = GROUND - 66;
+    // Villagers don't fight; royal_father just cheers
+    if(k.allyType==='royal_father') return; // king cheers but doesn't fight
 
-    // Join blue knight to dragon in 2P, others to princess
-    if(k.id===1 && numPlayers===2 && p2 && !p2.dead){
-      if(Math.abs(k.x - p2.x) < 65) k.state='riding';
-    } else if(p1 && !p1.dead){
-      if(Math.abs(k.x - p1.x) < 70) k.state='riding';
+    // Elf archer only targets aerial enemies
+    const elfOnly=k.allyType==='elf_archer';
+
+    let nearEnemy=null, nearDist=999;
+    enemies.forEach(e=>{
+      if(!e.alive) return;
+      const ex=e.worldX-worldX;
+      const d=Math.abs(ex-k.x);
+      const isAerial=e.type==='fire_imp'||e.type==='ice_shard'||e.type==='winged_lady';
+      if(elfOnly&&!isAerial) return;
+      if(d<nearDist){nearDist=d;nearEnemy=e;}
+    });
+    if(!elfOnly&&boss&&boss.alive){
+      const bd=Math.abs((boss.x-worldX+boss.w/2)-k.x);
+      if(bd<nearDist){nearDist=bd;nearEnemy=boss;}
     }
+
+    if(nearEnemy){
+      const tx2=nearEnemy.worldX!==undefined?(nearEnemy.worldX-worldX+nearEnemy.w/2):(nearEnemy.x-worldX+nearEnemy.w/2);
+      const ty2=nearEnemy.y+nearEnemy.h/2;
+
+      // Melee (knight types only, not elf)
+      k.meleeCool++;
+      const canMelee=k.allyType==='blue_knight'||k.allyType==='red_knight'||k.allyType==='green_knight';
+      if(canMelee&&nearDist<58&&k.meleeCool>=60){
+        k.meleeCool=0; k.swordSwing=12;
+        k.facing=tx2>k.x?1:-1;
+        if(nearEnemy===boss){
+          // Knights can only tickle the boss — small chip damage
+          boss.hp=Math.max(0,boss.hp-0.5);
+          spawnHitPtcl(tx2,ty2,'shield'); updateHUD();
+        } else {
+          nearEnemy.hp--;
+          spawnHitPtcl(tx2,nearEnemy.y+nearEnemy.h/2,'shield');
+          if(nearEnemy.hp<=0){nearEnemy.alive=false;bigExplosion(tx2,nearEnemy.y+nearEnemy.h/2);score1+=20*curLevel;updateHUD();}
+        }
+      }
+
+      // Ranged
+      k.shootCool++;
+      const shootRange=canMelee?280:350;
+      if(nearDist>=55&&nearDist<shootRange&&k.shootCool>=90){
+        k.shootCool=0;
+        const dx=tx2-k.x, dy=ty2-(k.y+18);
+        const len=Math.sqrt(dx*dx+dy*dy)||1;
+        k.facing=dx>0?1:-1;
+        const kind=k.allyType==='elf_archer'?'arrow':'knightArrow';
+        projectiles.push({kind,owner:'p1',x:k.x+(k.facing>0?30:0),y:k.y+18,vx:(dx/len)*8,vy:(dy/len)*8,w:18,h:7,alive:true,t:0,damage:1,knightShot:true});
+      }
+    } else {k.shootCool++;k.meleeCool++;}
+    if(k.swordSwing>0)k.swordSwing--;
   });
 }
-
 // ── HUD ──────────────────────────────────────────────
 function heartsStr(n,max){let s='';for(let i=0;i<max;i++) s+=i<n?'❤️':'🖤';return s;}
 function updateHUD(){
@@ -1065,7 +1301,10 @@ function updateHUD(){
     document.getElementById('flybar').style.width=(p1.flyFuel/FLY_MAX*100)+'%';
     document.getElementById('lives1El').textContent=heartsStr(lives1,LIVES_START);
   }
-  document.getElementById('chargebar').style.width=(chargeBeam.level/chargeBeam.maxLevel*100)+'%';
+  const cbPct=chargeBeam.cooldown>0?(1-chargeBeam.cooldown/chargeBeam.cooldownMax)*0.2:chargeBeam.level/chargeBeam.maxLevel;
+  const cbEl=document.getElementById('chargebar');
+  cbEl.style.width=(cbPct*100)+'%';
+  cbEl.style.background=chargeBeam.cooldown>0?'linear-gradient(90deg,#666,#888)':'linear-gradient(90deg,#ffe066,#fff)';
   document.getElementById('scoreEl').textContent=score1+(numPlayers===2?'+'+score2:'');
   document.getElementById('lvlEl').textContent=curLevel+'/5';
   if(p2){
@@ -1091,12 +1330,30 @@ function drawBG(){
   // Level-specific BG mountains
   drawLevelBGMountains(cfg);
 
-  // Ground strip
-  ctx.fillStyle=cfg.ground; ctx.fillRect(0,GROUND,W,H-GROUND);
-  ctx.fillStyle=cfg.groundTop; ctx.fillRect(0,GROUND,W,10);
-  // Ground texture
-  for(let gx=(-(worldX*0.5)%38+38)%38;gx<W;gx+=38){
-    ctx.fillStyle='rgba(0,0,0,0.10)';ctx.fillRect(gx,GROUND+12,20,5);
+  // Ground — cartoon gradient
+  const gg=ctx.createLinearGradient(0,GROUND,0,H);
+  gg.addColorStop(0,cfg.groundTop);gg.addColorStop(0.1,cfg.ground);gg.addColorStop(1,cfg.ground);
+  ctx.fillStyle=gg;ctx.fillRect(0,GROUND,W,H-GROUND);
+  const gd=cfg.groundDetail||'grass';
+  if(gd==='grass'){
+    ctx.fillStyle=cfg.groundTop;
+    for(let gx=(-(worldX*0.3)%44+44)%44;gx<W+22;gx+=44){
+      ctx.beginPath();ctx.ellipse(gx,GROUND,22,8,0,0,Math.PI,true);ctx.fill();
+    }
+  } else if(gd==='ice'){
+    ctx.fillStyle='rgba(160,220,255,0.45)';ctx.fillRect(0,GROUND,W,8);
+  } else if(gd==='scorched'){
+    ctx.fillStyle='#3a1000';
+    for(let gx=(-(worldX*0.25)%50+50)%50;gx<W+10;gx+=50){
+      ctx.beginPath();ctx.moveTo(gx,GROUND);ctx.lineTo(gx+8,GROUND-7);ctx.lineTo(gx+16,GROUND);ctx.fill();
+    }
+  } else if(gd==='mushroom'){
+    ctx.fillStyle='#4a2a08';
+    for(let gx=(-(worldX*0.28)%48+48)%48;gx<W+20;gx+=48){
+      ctx.beginPath();ctx.ellipse(gx,GROUND,18,7,0,0,Math.PI,true);ctx.fill();
+    }
+  } else {
+    ctx.fillStyle=cfg.groundTop;ctx.fillRect(0,GROUND,W,6);
   }
 
   // Scenery items
@@ -1265,7 +1522,186 @@ function drawSceneryItems(cfg){
         ctx.fillStyle='#2a0840';ctx.fillRect(sx,GROUND-188,32,14);
         ctx.fillStyle='#1a0828';ctx.fillRect(sx+2,GROUND-188,28,8);
         break;
-      case 'gargoyle':
+      case 'castle':{
+        const th=s.theme||'meadow';
+        const cw=320, ch=260;
+        const csx=sx-cw/2+40;
+        const csy=GROUND-ch;
+
+        // Stone palette per theme
+        const wallC =th==='shadow'?'#1c0830':th==='volcanic'?'#4a1800':th==='ice'?'#1a3c6a':th==='dark'?'#2a1408':'#7a6a58';
+        const wallL =th==='shadow'?'#2e1040':th==='volcanic'?'#6a2600':th==='ice'?'#2a5080':th==='dark'?'#3a2010':'#9a8a76';
+        const wallD =th==='shadow'?'#0e0018':th==='volcanic'?'#2a0c00':th==='ice'?'#0a1830':th==='dark'?'#180a04':'#5a4a3a';
+        const roofC =th==='shadow'?'#3a005a':th==='volcanic'?'#7a1800':th==='ice'?'#3a78a0':th==='dark'?'#3a1400':'#7a2010';
+        const roofL =th==='shadow'?'#6600aa':th==='volcanic'?'#aa2800':th==='ice'?'#5aaacc':th==='dark'?'#6a2800':'#aa3820';
+        const winC  =th==='shadow'?'#cc44ff':th==='volcanic'?'#ff6600':th==='ice'?'#88eeff':th==='dark'?'#ffcc44':'#88ccff';
+        const flagC =th==='shadow'?'#cc00cc':th==='volcanic'?'#ff2200':th==='ice'?'#00ccff':th==='dark'?'#ff8800':'#cc2020';
+        const mossC =th==='ice'?'rgba(140,200,255,0.15)':th==='shadow'?'rgba(100,0,100,0.12)':'rgba(60,100,40,0.18)';
+
+        ctx.save();
+        ctx.translate(csx, csy);
+
+        // ── Ground shadow / moat hint ──
+        ctx.fillStyle='rgba(0,0,0,0.22)';
+        ctx.beginPath(); ctx.ellipse(cw/2, ch+4, cw*0.48, 14, 0, 0, Math.PI*2); ctx.fill();
+        if(th==='meadow'||th==='dark'||th==='ice'){
+          // Moat reflection shimmer
+          const moatCol=th==='ice'?'rgba(100,180,255,0.3)':'rgba(40,100,180,0.28)';
+          ctx.fillStyle=moatCol;
+          ctx.beginPath(); ctx.ellipse(cw/2,ch+2,cw*0.45,8,0,0,Math.PI*2); ctx.fill();
+        }
+
+        // Helper to draw a stone-coursed rectangle
+        function stoneRect(x,y,w,h,base,light,dark2){
+          // Main fill with subtle gradient
+          const gr=ctx.createLinearGradient(x,y,x+w,y+h*0.5);
+          gr.addColorStop(0,light); gr.addColorStop(0.4,base); gr.addColorStop(1,dark2);
+          ctx.fillStyle=gr; ctx.strokeStyle='rgba(0,0,0,0.6)'; ctx.lineWidth=2;
+          ctx.beginPath(); ctx.roundRect(x,y,w,h,3); ctx.fill(); ctx.stroke();
+          // Stone courses
+          ctx.strokeStyle='rgba(0,0,0,0.22)'; ctx.lineWidth=1;
+          for(let ry=18;ry<h;ry+=18){
+            ctx.beginPath(); ctx.moveTo(x+4,y+ry); ctx.lineTo(x+w-4,y+ry); ctx.stroke();
+          }
+          // Individual stone blocks per row
+          for(let ri=0;ri<Math.floor(h/18);ri++){
+            const offset=(ri%2)*11;
+            ctx.fillStyle='rgba(0,0,0,0.07)';
+            for(let rx=x+2+offset;rx<x+w-4;rx+=22)
+              ctx.fillRect(rx,y+ri*18+1,20,15);
+          }
+          // Moss/weathering overlay
+          ctx.fillStyle=mossC;
+          ctx.beginPath(); ctx.roundRect(x,y,w,h,3); ctx.fill();
+          // Side depth shadow
+          ctx.fillStyle='rgba(0,0,0,0.14)'; ctx.fillRect(x,y,5,h);
+          ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(x+w-4,y,4,h);
+        }
+
+        // Helper for merlon row
+        function merlons(x,y,totalW,mW,mH){
+          const count=Math.floor(totalW/(mW*2));
+          const spacing=totalW/count;
+          for(let i=0;i<count;i++){
+            const mx=x+i*spacing;
+            ctx.fillStyle=wallL; ctx.strokeStyle='rgba(0,0,0,0.6)'; ctx.lineWidth=1.5;
+            ctx.beginPath(); ctx.roundRect(mx,y-mH,mW-2,mH,2); ctx.fill(); ctx.stroke();
+            ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.fillRect(mx,y-mH,4,mH);
+          }
+        }
+
+        // Helper: cone roof
+        function coneRoof(cx2,tipY,baseY,bW,col,col2){
+          const gr2=ctx.createLinearGradient(cx2-bW/2,baseY,cx2+bW/2,tipY);
+          gr2.addColorStop(0,col); gr2.addColorStop(1,col2);
+          ctx.fillStyle=gr2; ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=2;
+          ctx.beginPath(); ctx.moveTo(cx2,tipY); ctx.lineTo(cx2-bW/2-4,baseY); ctx.lineTo(cx2+bW/2+4,baseY); ctx.closePath();
+          ctx.fill(); ctx.stroke();
+          // Roof tiles lines
+          ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=1;
+          for(let ti=1;ti<6;ti++){
+            const frac=ti/6, ry2=tipY+(baseY-tipY)*frac;
+            const rw=(bW+8)*frac;
+            ctx.beginPath(); ctx.moveTo(cx2-rw/2,ry2); ctx.lineTo(cx2+rw/2,ry2); ctx.stroke();
+          }
+          // Highlight
+          ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=1.5;
+          ctx.beginPath(); ctx.moveTo(cx2,tipY); ctx.lineTo(cx2-bW*0.12,baseY); ctx.stroke();
+        }
+
+        // Helper: arched window
+        function archWindow(wx2,wy2,ww,wh){
+          const r=ww/2;
+          ctx.fillStyle='rgba(0,0,0,0.8)';
+          ctx.beginPath(); ctx.moveTo(wx2,wy2); ctx.lineTo(wx2,wy2+wh-r); ctx.arc(wx2+r,wy2+wh-r,r,Math.PI,0,true); ctx.lineTo(wx2+ww,wy2); ctx.closePath(); ctx.fill();
+          ctx.fillStyle=winC; ctx.globalAlpha=0.5;
+          ctx.beginPath(); ctx.moveTo(wx2+3,wy2+2); ctx.lineTo(wx2+3,wy2+wh-r); ctx.arc(wx2+r,wy2+wh-r,r-3,Math.PI,0,true); ctx.lineTo(wx2+ww-3,wy2+2); ctx.closePath(); ctx.fill();
+          ctx.globalAlpha=1;
+          // Glazing bars
+          ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=1.5;
+          ctx.beginPath(); ctx.moveTo(wx2+r,wy2); ctx.lineTo(wx2+r,wy2+wh); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(wx2,wy2+wh*0.4); ctx.lineTo(wx2+ww,wy2+wh*0.4); ctx.stroke();
+        }
+
+        // ── LEFT TOWER ──
+        const ltw=62, lth=ch*0.72, ltx=0, lty=ch-lth;
+        stoneRect(ltx,lty,ltw,lth,wallC,wallL,wallD);
+        merlons(ltx,lty,ltw,14,20);
+        coneRoof(ltx+ltw/2,lty-65,lty,ltw,roofC,roofL);
+        archWindow(ltx+ltw*0.2,lty+lth*0.2,18,26);
+        archWindow(ltx+ltw*0.2,lty+lth*0.5,18,26);
+        // Flagpole
+        ctx.strokeStyle=wallD; ctx.lineWidth=3; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(ltx+ltw/2,lty-65); ctx.lineTo(ltx+ltw/2,lty-95); ctx.stroke();
+        ctx.fillStyle=flagC;
+        ctx.beginPath(); ctx.moveTo(ltx+ltw/2,lty-95); ctx.lineTo(ltx+ltw/2+22,lty-84); ctx.lineTo(ltx+ltw/2,lty-74); ctx.fill();
+
+        // ── RIGHT TOWER ──
+        const rtx=cw-ltw;
+        stoneRect(rtx,lty,ltw,lth,wallC,wallL,wallD);
+        merlons(rtx,lty,ltw,14,20);
+        coneRoof(rtx+ltw/2,lty-65,lty,ltw,roofC,roofL);
+        archWindow(rtx+ltw*0.2,lty+lth*0.2,18,26);
+        archWindow(rtx+ltw*0.2,lty+lth*0.5,18,26);
+        ctx.strokeStyle=wallD; ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(rtx+ltw/2,lty-65); ctx.lineTo(rtx+ltw/2,lty-95); ctx.stroke();
+        ctx.fillStyle=flagC;
+        ctx.beginPath(); ctx.moveTo(rtx+ltw/2,lty-95); ctx.lineTo(rtx+ltw/2+22,lty-84); ctx.lineTo(rtx+ltw/2,lty-74); ctx.fill();
+
+        // ── CURTAIN WALL ──
+        const cwx=ltw, cwy=ch*0.6, cww=cw-ltw*2, cwh=ch-cwy;
+        stoneRect(cwx,cwy,cww,cwh,wallC,wallL,wallD);
+        merlons(cwx,cwy,cww,12,16);
+
+        // ── MAIN KEEP (taller, central) ──
+        const mkw=cw*0.34, mkh=ch*0.92, mkx=(cw-mkw)/2, mky=ch-mkh;
+        stoneRect(mkx,mky,mkw,mkh,wallC,wallL,wallD);
+        merlons(mkx,mky,mkw,14,22);
+        coneRoof(mkx+mkw/2,mky-78,mky,mkw,roofC,roofL);
+        // Keep windows
+        for(let wi=0;wi<3;wi++) archWindow(mkx+mkw*0.2,mky+mkh*0.12+wi*mkh*0.22,mkw*0.28,mkh*0.17);
+        for(let wi=0;wi<3;wi++) archWindow(mkx+mkw*0.54,mky+mkh*0.12+wi*mkh*0.22,mkw*0.28,mkh*0.17);
+        // Keep flag
+        ctx.strokeStyle=wallD; ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(mkx+mkw/2,mky-78); ctx.lineTo(mkx+mkw/2,mky-112); ctx.stroke();
+        ctx.fillStyle=flagC;
+        ctx.beginPath(); ctx.moveTo(mkx+mkw/2,mky-112); ctx.lineTo(mkx+mkw/2+28,mky-98); ctx.lineTo(mkx+mkw/2,mky-84); ctx.fill();
+
+        // ── GATEHOUSE (front, lower) ──
+        const ghw=cw*0.26, ghh=ch*0.5, ghx=(cw-ghw)/2, ghy=ch-ghh;
+        stoneRect(ghx,ghy,ghw,ghh,wallL,wallC,wallD);
+        merlons(ghx,ghy,ghw,10,14);
+        // Portcullis arch
+        const archW=ghw*0.55, archH=ghh*0.72;
+        const archX=ghx+(ghw-archW)/2, archY=ghy+(ghh-archH);
+        ctx.fillStyle='rgba(0,0,0,0.85)';
+        ctx.beginPath();
+        ctx.moveTo(archX, ch);
+        ctx.lineTo(archX, archY+archH*0.4);
+        ctx.arc(archX+archW/2, archY+archH*0.4, archW/2, Math.PI, 0, false);
+        ctx.lineTo(archX+archW, ch);
+        ctx.closePath(); ctx.fill();
+        // Portcullis grid
+        ctx.strokeStyle='#555'; ctx.lineWidth=3; ctx.lineCap='butt';
+        const bars=4;
+        for(let b=0;b<=bars;b++){
+          ctx.beginPath(); ctx.moveTo(archX+b*(archW/bars),archY+archH*0.3); ctx.lineTo(archX+b*(archW/bars),ch); ctx.stroke();
+        }
+        for(let b=0;b<4;b++){
+          ctx.beginPath(); ctx.moveTo(archX,archY+archH*0.3+b*(ch-archY-archH*0.3)/3.5); ctx.lineTo(archX+archW,archY+archH*0.3+b*(ch-archY-archH*0.3)/3.5); ctx.stroke();
+        }
+        // Portcullis spikes
+        ctx.fillStyle='#777';
+        for(let b=0;b<=bars;b++) ctx.beginPath(),ctx.moveTo(archX+b*(archW/bars)-4,ch),ctx.lineTo(archX+b*(archW/bars)+4,ch),ctx.lineTo(archX+b*(archW/bars),ch+12),ctx.fill();
+        // Drawbridge hint
+        ctx.fillStyle='#5a3a10'; ctx.strokeStyle='#3a2008'; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.roundRect(archX+2,ch-4,archW-4,8,2); ctx.fill(); ctx.stroke();
+        for(let p=0;p<4;p++){ ctx.strokeStyle='#3a2008'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(archX+4+p*(archW-8)/3,ch-4); ctx.lineTo(archX+4+p*(archW-8)/3,ch+4); ctx.stroke(); }
+
+        ctx.restore();
+        break;
+      }
+      case 'gargoyle':      case 'gargoyle':
         ctx.fillStyle='#2a1040';ctx.fillRect(sx+8,GROUND-80,20,80);
         ctx.fillStyle='#3a1850';ctx.beginPath();ctx.ellipse(sx+18,GROUND-90,16,16,0,0,Math.PI*2);ctx.fill();
         ctx.fillStyle='#ff2200';ctx.fillRect(sx+13,GROUND-94,4,4);ctx.fillRect(sx+21,GROUND-94,4,4);
@@ -1351,10 +1787,19 @@ function drawWallsAndPlatforms(){
       // Wooden plank — skip, drawn by lavaRiver scenery handler
       return;
     }
-    ctx.fillStyle=cfg.platformColor; ctx.fillRect(sx,pl.y,pl.w,pl.h);
-    ctx.fillStyle=cfg.wallColor; ctx.fillRect(sx,pl.y,pl.w,5);
-    ctx.fillStyle='rgba(255,255,255,0.07)';
-    for(let mx=sx;mx<sx+pl.w;mx+=14) ctx.fillRect(mx,pl.y+2,8,3);
+    if(pl.isCastleFloor){
+      // Stone floor with interior lighting
+      const fl=ctx.createLinearGradient(sx,pl.y,sx+pl.w,pl.y+pl.h);
+      fl.addColorStop(0,'#9a8a76');fl.addColorStop(0.5,'#7a6a58');fl.addColorStop(1,'#9a8a76');
+      ctx.fillStyle=fl;ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.roundRect(sx,pl.y,pl.w,pl.h,2);ctx.fill();ctx.stroke();
+      // Stone tile lines
+      ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=1;
+      for(let tx2=sx+20;tx2<sx+pl.w;tx2+=20){ctx.beginPath();ctx.moveTo(tx2,pl.y);ctx.lineTo(tx2,pl.y+pl.h);ctx.stroke();}
+    } else {
+      cRR(sx,pl.y,pl.w,pl.h,4,cfg.platformColor,cfg.wallColor,2);
+      ctx.fillStyle='rgba(255,255,255,0.18)';ctx.fillRect(sx+4,pl.y+2,pl.w-8,3);
+    }
   });
   walls.forEach(wl=>{
     const sx=wl.x-worldX;
@@ -1371,67 +1816,406 @@ function drawWallsAndPlatforms(){
 }
 
 function drawKnightCage(sx,sy,sw,sh){
-  ctx.fillStyle='#777';
-  for(let bx=sx;bx<sx+sw;bx+=13) ctx.fillRect(bx,sy,5,sh-60);
-  ctx.fillRect(sx,sy,sw,7); ctx.fillRect(sx,sy+sh-60-7,sw,7);
+  const cfg2=LEVELS[curLevel-1];
+  const th2=cfg2.castleTheme||'meadow';
+  const wallC=th2==='shadow'?'#1a0028':th2==='volcanic'?'#4a1800':th2==='ice'?'#1a3c6a':th2==='dark'?'#2a1408':'#6a5a48';
+  const wallC2=th2==='shadow'?'#2a0040':th2==='volcanic'?'#6a2800':th2==='ice'?'#2a5080':th2==='dark'?'#3a2010':'#8a7a62';
+  const roofC=th2==='shadow'?'#440066':th2==='volcanic'?'#8c2000':th2==='ice'?'#4488aa':th2==='dark'?'#4a1a00':'#883318';
+
+  const groundY = sy+sh-60; // = GROUND in absolute coords
+  const towerH = sh-60;     // visible tower height above ground
+
+  // ── Tower body ──
+  ctx.fillStyle=wallC; ctx.strokeStyle='#111'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.roundRect(sx, sy, sw, towerH, 4); ctx.fill(); ctx.stroke();
+
+  // Stone rows
+  ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=1;
+  for(let ry=16; ry<towerH; ry+=18){
+    ctx.beginPath(); ctx.moveTo(sx+3, sy+ry); ctx.lineTo(sx+sw-3, sy+ry); ctx.stroke();
+  }
+  // Alternating stone offsets
+  for(let ry=16; ry<towerH; ry+=36){
+    ctx.fillStyle='rgba(0,0,0,0.06)';
+    for(let rx=sx+2; rx<sx+sw-2; rx+=22) ctx.fillRect(rx, sy+ry, 18, 16);
+  }
+  // Side shading
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.fillRect(sx,sy,6,towerH);
+  ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(sx+sw-5,sy,5,towerH);
+
+  // ── Crenellations (battlements) at top ──
+  const merlonW=sw/5, merlonH=22;
+  for(let bi=0;bi<5;bi++){
+    if(bi%2===0){
+      ctx.fillStyle=wallC2; ctx.strokeStyle='#111'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(sx+bi*merlonW, sy-merlonH, merlonW-3, merlonH, 3);
+      ctx.fill(); ctx.stroke();
+    }
+  }
+
+  // ── Conical roof ──
+  ctx.fillStyle=roofC; ctx.strokeStyle='#111'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(sx+sw/2, sy-merlonH-52);
+  ctx.lineTo(sx-4, sy-merlonH+2);
+  ctx.lineTo(sx+sw+4, sy-merlonH+2);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Roof highlight stripe
+  ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(sx+sw/2, sy-merlonH-52);
+  ctx.lineTo(sx+sw*0.38, sy-merlonH+2);
+  ctx.stroke();
+
+  // ── Arrow slit windows ──
+  for(let wi=1;wi<=3;wi++){
+    const wy=sy+towerH*0.18*wi;
+    ctx.fillStyle='#0a0a10';
+    ctx.beginPath();
+    ctx.roundRect(sx+sw/2-5, wy, 10, 20, 2);
+    ctx.fill();
+    // Cross-slit
+    ctx.fillRect(sx+sw/2-8, wy+8, 16, 5);
+  }
+
+  // ── Iron-bar window at bottom (prison cell) ──
+  const barX=sx+8, barY=groundY-90, barW=sw-16, barH=62;
+  ctx.fillStyle='#0a0a10';
+  ctx.beginPath(); ctx.roundRect(barX, barY, barW, barH, 4); ctx.fill();
+  ctx.strokeStyle='#111'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(barX, barY, barW, barH, 4); ctx.stroke();
+  // Prison bars
+  ctx.strokeStyle='#666'; ctx.lineWidth=4; ctx.lineCap='round';
+  for(let b=0;b<5;b++){
+    ctx.beginPath();
+    ctx.moveTo(barX+4+b*(barW-8)/4, barY+2);
+    ctx.lineTo(barX+4+b*(barW-8)/4, barY+barH-2);
+    ctx.stroke();
+  }
+  // Horizontal bar
+  ctx.strokeStyle='#777'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(barX+2,barY+barH/2); ctx.lineTo(barX+barW-2,barY+barH/2); ctx.stroke();
+
+  // ── Prisoner character standing at ground floor ──
   if(!knightFreed){
-    const cfg2=LEVELS[curLevel-1]; const kc=cfg2.knightColor||'blue';
-    drawKnight(sx+sw/2-13,sy+12, false, 0, kc);
-    if(Math.abs(sx-(p1?p1.x:300))<220){
-      ctx.fillStyle='rgba(255,255,255,0.92)';
-      roundRect(sx-14,sy-36,80,22,7);
-      ctx.fillStyle='#333';ctx.font='bold 10px Nunito';ctx.textAlign='left';
-      ctx.fillText('Help! 😭',sx-8,sy-18);
+    const at2=cfg2.allyType||'blue_knight';
+    // Draw the correct prisoner character, feet at ground level
+    const charH=62; // approx character height
+    const cx=sx+sw/2-18;
+    const cy=groundY-charH; // feet on ground
+
+    if(at2==='villager'){
+      // Villager — crouching/sad pose
+      cEl(cx+19,cy+14,10,11,'#f5c890','#333',2);
+      ctx.fillStyle='#8b4513'; ctx.beginPath(); ctx.ellipse(cx+19,cy+5,11,6,0,0,Math.PI*2); ctx.fill();
+      cRR(cx+8,cy+22,22,24,5,'#c8a060','#333',2);
+      cRR(cx+2,cy+24,7,16,3,'#a07840','#333',2); cRR(cx+27,cy+24,7,16,3,'#a07840','#333',2);
+      cRR(cx+8,cy+44,10,18,3,'#6a4820','#333',2); cRR(cx+20,cy+44,10,18,3,'#6a4820','#333',2);
+      // Sad face
+      cEl(cx+14,cy+12,2,2,'#333'); cEl(cx+24,cy+12,2,2,'#333');
+      ctx.strokeStyle='#555'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(cx+19,cy+20,4,0.3,Math.PI-0.3,true); ctx.stroke();
+    } else if(at2==='elf_archer'){
+      // Elf archer in cell
+      cEl(cx+19,cy+10,9,10,'#e8c080','#333',2);
+      ctx.fillStyle='#8b6010'; ctx.beginPath(); ctx.ellipse(cx+19,cy+3,9,7,0,0,Math.PI*2); ctx.fill();
+      // Pointy ears
+      ctx.fillStyle='#e8c080'; ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(cx+10,cy+8); ctx.lineTo(cx+5,cy+2); ctx.lineTo(cx+10,cy+14); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx+28,cy+8); ctx.lineTo(cx+33,cy+2); ctx.lineTo(cx+28,cy+14); ctx.closePath(); ctx.fill(); ctx.stroke();
+      cRR(cx+10,cy+18,18,24,5,'#2a7a30','#111',2);
+      cRR(cx+4,cy+20,7,18,3,'#2a7a30','#111',2); cRR(cx+27,cy+20,7,18,3,'#2a7a30','#111',2);
+      cRR(cx+10,cy+40,9,22,3,'#1a5a20','#111',2); cRR(cx+19,cy+40,9,22,3,'#1a5a20','#111',2);
+      // Eyes
+      cEl(cx+15,cy+9,2,2.5,'#2a7a30'); cEl(cx+23,cy+9,2,2.5,'#2a7a30');
+    } else if(at2==='royal_father'){
+      // King in red robes
+      cEl(cx+19,cy+10,11,12,'#f0c090','#333',2);
+      // Crown
+      ctx.fillStyle='#ffe066'; ctx.strokeStyle='#cc8800'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(cx+9,cy+2); ctx.lineTo(cx+29,cy+2); ctx.lineTo(cx+29,cy+8);
+      ctx.lineTo(cx+24,cy+4); ctx.lineTo(cx+19,cy+8); ctx.lineTo(cx+14,cy+4); ctx.lineTo(cx+9,cy+8); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      // Grey beard
+      ctx.fillStyle='#aaa'; ctx.beginPath(); ctx.moveTo(cx+11,cy+16); ctx.bezierCurveTo(cx+9,cy+28,cx+14,cy+32,cx+19,cy+30); ctx.bezierCurveTo(cx+24,cy+32,cx+29,cy+28,cx+27,cy+16); ctx.closePath(); ctx.fill();
+      ctx.fillStyle='#8b0000'; ctx.strokeStyle='#111'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(cx+4,cy+20); ctx.lineTo(cx+2,cy+62); ctx.lineTo(cx+36,cy+62); ctx.lineTo(cx+34,cy+20); ctx.closePath(); ctx.fill(); ctx.stroke();
+      cEl(cx+14,cy+9,2,2.5,'#3a2060'); cEl(cx+24,cy+9,2,2.5,'#3a2060');
+    } else {
+      // blue_knight or green_knight — draw full knight with helmet
+      drawKnight(cx, cy, false, 0, cfg2.knightColor||'blue', 0);
+    }
+
+    // "Help!" speech bubble (only shows when player is nearby)
+    if(Math.abs(sx+sw/2-(p1?p1.x+p1.w/2:300))<260){
+      ctx.fillStyle='rgba(255,255,255,0.94)';
+      ctx.beginPath(); ctx.roundRect(sx+sw/2-30, sy-40, 64, 24, 8); ctx.fill();
+      ctx.strokeStyle='#aaa'; ctx.lineWidth=1; ctx.beginPath(); ctx.roundRect(sx+sw/2-30, sy-40, 64, 24, 8); ctx.stroke();
+      // Bubble tail
+      ctx.fillStyle='rgba(255,255,255,0.94)';
+      ctx.beginPath(); ctx.moveTo(sx+sw/2-6,sy-18); ctx.lineTo(sx+sw/2,sy-10); ctx.lineTo(sx+sw/2+6,sy-18); ctx.fill();
+      ctx.fillStyle='#222'; ctx.font='bold 10px Nunito,sans-serif'; ctx.textAlign='center';
+      ctx.fillText('Help! 😭', sx+sw/2+2, sy-24);
     }
   } else {
-    // Cage is open — broken bars visual
-    ctx.fillStyle='rgba(255,220,50,0.8)';ctx.font='bold 11px Cinzel,serif';ctx.textAlign='center';
-    ctx.fillText('🔓 FREE!',sx+sw/2,sy-10);
+    // Freed — show broken bars + sparkle
+    ctx.strokeStyle='#ff0'; ctx.lineWidth=3; ctx.lineCap='round';
+    // Two bent bars
+    ctx.beginPath(); ctx.moveTo(barX+4,barY+2); ctx.lineTo(barX+10,barY+20); ctx.lineTo(barX+6,barY+barH-2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(barX+barW-4,barY+2); ctx.lineTo(barX+barW-10,barY+20); ctx.lineTo(barX+barW-6,barY+barH-2); ctx.stroke();
+    ctx.fillStyle='rgba(255,220,50,0.9)'; ctx.font='bold 12px Cinzel,serif'; ctx.textAlign='center';
+    ctx.fillText('🔓 FREE!', sx+sw/2, sy-14);
   }
 }
 
 function drawFreedKnight(){
   allKnights.forEach(k=>{
-    // Skip current level's knight until freed
-    if(k.id===curLevel && !knightFreed) return;
+    if(k.id===curLevel&&!knightFreed) return;
     const kx=Math.floor(k.x), ky=Math.floor(k.y);
+    const at=k.allyType||'blue_knight';
     const flip=k.facing<0;
     ctx.save();
-    if(flip){ctx.translate(kx+32,0);ctx.scale(-1,1);}
-    const ox=flip?0:kx;
-    drawKnight(ox, ky, true, k.animF, k.color||'blue');
+    if(flip){ctx.translate(kx+36,0);ctx.scale(-1,1);}
+    const ox=flip?0:kx, f=k.animF, sw=k.swordSwing||0;
+
+    if(at==='villager'){
+      cRR(ox+8,ky+16,22,28,5,'#c8a060','#333',2);
+      cRR(ox+2,ky+18,8,20+(f?3:0),4,'#a07840','#333',2);
+      cRR(ox+28,ky+18,8,20+(f?0:3),4,'#a07840','#333',2);
+      cEl(ox+19,ky+8,12,13,'#f5c890','#333',2);
+      ctx.fillStyle='#8b4513';ctx.beginPath();ctx.ellipse(ox+19,ky+0,12,7,0,0,Math.PI*2);ctx.fill();
+      cEl(ox+14,ky+6,2.5,3,'#333');cEl(ox+24,ky+6,2.5,3,'#333');
+      ctx.strokeStyle='#555';ctx.lineWidth=2;ctx.beginPath();ctx.arc(ox+19,ky+13,5,0.3,Math.PI-0.3,true);ctx.stroke();
+      cRR(ox+8,ky+42,10,f?14:10,4,'#6a4820','#333',2);cRR(ox+20,ky+42,10,f?10:14,4,'#6a4820','#333',2);
+    } else if(at==='elf_archer'){
+      ctx.strokeStyle='#8b6010';ctx.lineWidth=8;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ox+10,ky+6);ctx.bezierCurveTo(ox+4,ky+18,ox+2,ky+38,ox+8,ky+48);ctx.stroke();
+      ctx.strokeStyle='#d4a020';ctx.lineWidth=5;
+      ctx.beginPath();ctx.moveTo(ox+10,ky+6);ctx.bezierCurveTo(ox+4,ky+18,ox+2,ky+38,ox+8,ky+48);ctx.stroke();
+      cRR(ox+10,ky+18,18,28,5,'#2a7a30','#111',2);
+      ctx.fillStyle='#4aaa48';ctx.beginPath();ctx.ellipse(ox+19,ky+26,5,7,-0.3,0,Math.PI*2);ctx.fill();
+      cEl(ox+19,ky+8,10,11,'#e8c080','#333',2);
+      ctx.fillStyle='#e8c080';ctx.strokeStyle='#333';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+9,ky+6);ctx.lineTo(ox+4,ky+0);ctx.lineTo(ox+9,ky+12);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ox+29,ky+6);ctx.lineTo(ox+34,ky+0);ctx.lineTo(ox+29,ky+12);ctx.closePath();ctx.fill();ctx.stroke();
+      cEl(ox+15,ky+6,2.5,3.5,'#2a7a30');cEl(ox+23,ky+6,2.5,3.5,'#2a7a30');
+      ctx.strokeStyle='#6a4010';ctx.lineWidth=4;ctx.lineCap='round';
+      ctx.save();ctx.translate(ox+32,ky+20);ctx.rotate(sw>0?-0.4:0);
+      ctx.beginPath();ctx.arc(0,10,14,-1.1,1.1);ctx.stroke();
+      ctx.strokeStyle='#ddd';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(14*Math.cos(-1.1),10+14*Math.sin(-1.1));ctx.lineTo(14*Math.cos(1.1),10+14*Math.sin(1.1));ctx.stroke();ctx.restore();
+      cRR(ox+10,ky+44,9,f?16:12,4,'#1a5a20','#111',2);cRR(ox+19,ky+44,9,f?12:16,4,'#1a5a20','#111',2);
+    } else if(at==='royal_father'){
+      ctx.fillStyle='#8b0000';ctx.strokeStyle='#111';ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(ox+4,ky+18);ctx.lineTo(ox+2,ky+66);ctx.lineTo(ox+36,ky+66);ctx.lineTo(ox+34,ky+18);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#ffe066';ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(ox+4,ky+24);ctx.lineTo(ox+14,ky+18);ctx.lineTo(ox+24,ky+24);ctx.lineTo(ox+34,ky+18);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ox+2,ky+66);ctx.lineTo(ox+36,ky+66);ctx.stroke();
+      cRR(ox+4,ky+38,30,6,2,'#ffe066','#888',2);
+      cRR(ox-2,ky+20,10,28+(f?4:0),4,'#8b0000','#111',2);cRR(ox+30,ky+20,10,28+(f?0:4),4,'#8b0000','#111',2);
+      cEl(ox+19,ky+8,12,13,'#f0c090','#333',2);
+      ctx.fillStyle='#aaa';ctx.strokeStyle='#888';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(ox+10,ky+14);ctx.bezierCurveTo(ox+8,ky+30,ox+14,ky+36,ox+19,ky+34);ctx.bezierCurveTo(ox+24,ky+36,ox+30,ky+30,ox+28,ky+14);ctx.closePath();ctx.fill();ctx.stroke();
+      cEl(ox+14,ky+7,2.5,3,'#3a2060');cEl(ox+24,ky+7,2.5,3,'#3a2060');
+      ctx.fillStyle='#ffe066';ctx.strokeStyle='#cc8800';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+9,ky-3);ctx.lineTo(ox+29,ky-3);ctx.lineTo(ox+29,ky+4);ctx.lineTo(ox+24,ky+0);ctx.lineTo(ox+19,ky+5);ctx.lineTo(ox+14,ky+0);ctx.lineTo(ox+9,ky+4);ctx.closePath();ctx.fill();ctx.stroke();
+      cEl(ox+19,ky-3,3,3,'#ff4488');
+      ctx.strokeStyle='#aa8800';ctx.lineWidth=4;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ox+34,ky+6);ctx.lineTo(ox+36,ky+54);ctx.stroke();
+      cEl(ox+34,ky+2,7,7,'#ffe066','#cc8800',2);
+      cRR(ox+8,ky+64,12,f?16:12,4,'#6a0000','#111',2);cRR(ox+18,ky+64,12,f?12:16,4,'#6a0000','#111',2);
+    } else {
+      // Knight (blue or green) — sword and shield
+      const kc=KNIGHT_COLORS[k.color||'blue']||'#3b82f6';
+      const kl=KNIGHT_PLUME[k.color||'blue']||'#60a5fa';
+      const kd=KNIGHT_DARK[k.color||'blue']||'#1d4ed8';
+      // Sword
+      ctx.save();ctx.translate(ox+28,ky+20);ctx.rotate(sw>0?-0.9+sw/12*0.6:-0.25);
+      ctx.strokeStyle='#bbb';ctx.lineWidth=5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-28);ctx.stroke();
+      ctx.strokeStyle='#ccc';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-28);ctx.stroke();
+      ctx.strokeStyle='#8b6820';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-6,-2);ctx.lineTo(6,-2);ctx.stroke();
+      ctx.fillStyle='#ffe066';ctx.beginPath();ctx.moveTo(-2,-30);ctx.lineTo(2,-30);ctx.lineTo(0,-36);ctx.fill();
+      if(sw>0){ctx.globalAlpha=0.38;ctx.strokeStyle='#fff';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-28);ctx.stroke();ctx.globalAlpha=1;}
+      ctx.restore();
+      // Body
+      cRR(ox+6,ky+16,26,28,5,'#888','#222',2.5);
+      cRR(ox+8,ky+18,22,20,4,'#aaa','#333',2);
+      cRR(ox+11,ky+22,16,10,3,kc,'#333',2);
+      cRR(ox+1,ky+18,7,18+(sw>0?-4:f?3:0),3,'#999','#222',2);
+      cRR(ox+24,ky+18,7,18+(sw>0?-4:f?0:3),3,'#999','#222',2);
+      cRR(ox+0,ky+34,8,8,3,'#888','#222',1.5);cRR(ox+24,ky+34,8,8,3,'#888','#222',1.5);
+      cRR(ox+6,ky+42,26,5,2,'#5a3a10','#333',1.5);
+      cRR(ox+6,ky+46,11,f?16:12,4,'#888','#222',2);cRR(ox+17,ky+46,11,f?12:16,4,'#888','#222',2);
+      cRR(ox+4,ky+46+(f?16:12),14,7,3,'#4a3010','#222',2);cRR(ox+17,ky+46+(f?12:16),14,7,3,'#4a3010','#222',2);
+      cRR(ox+8,ky-2,22,16,5,'#999','#222',2.5);cRR(ox+8,ky+8,22,6,2,'#888','#333',1.5);
+      // Plume
+      ctx.fillStyle=kc;ctx.strokeStyle=kd;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+14,ky-2);ctx.bezierCurveTo(ox+10,ky-14,ox+16,ky-20,ox+19,ky-18);ctx.bezierCurveTo(ox+22,ky-20,ox+28,ky-14,ox+24,ky-2);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle=kl;ctx.beginPath();ctx.moveTo(ox+16,ky-2);ctx.bezierCurveTo(ox+13,ky-12,ox+17,ky-16,ox+19,ky-14);ctx.bezierCurveTo(ox+21,ky-16,ox+25,ky-12,ox+22,ky-2);ctx.closePath();ctx.fill();
+      // Cape
+      ctx.fillStyle=kc;ctx.strokeStyle=kd;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+6,ky+12);ctx.bezierCurveTo(ox+2,ky+24,ox+1,ky+42+(sw?0:f?4:0),ox+6,ky+44+(sw?0:f?6:0));ctx.lineTo(ox+9,ky+12);ctx.closePath();ctx.fill();ctx.stroke();
+    }
     ctx.restore();
   });
 }
 
-function drawKnight(x,y, animate=false, f=0, color='blue'){
+function drawKnight(x,y, animate=false, f=0, color='blue', swordSwing=0){
   const cMain = KNIGHT_COLORS[color]||'#3b82f6';
   const cLight= KNIGHT_PLUME[color]||'#60a5fa';
   const cDark = KNIGHT_DARK[color]||'#1d4ed8';
-  // Armour body
-  ctx.fillStyle='#aaa';ctx.fillRect(x+5,y+18,22,28);
-  ctx.fillStyle='#999';ctx.fillRect(x+5,y+6,22,18);
-  ctx.fillStyle='#bbb';ctx.fillRect(x+8,y+9,16,8);
-  ctx.fillStyle='#333';ctx.fillRect(x+8,y+12,16,4);
-  ctx.fillStyle='#aaa';ctx.fillRect(x+1,y+20,7,18);ctx.fillRect(x+24,y+20,7,18);
-  if(animate){
-    ctx.fillStyle='#888';ctx.fillRect(x+7,y+46,10,(f<2)?20:14);ctx.fillRect(x+17,y+46,10,(f<2)?14:20);
-  } else {
-    ctx.fillStyle='#888';ctx.fillRect(x+7,y+46,10,20);ctx.fillRect(x+17,y+46,10,20);
+  const swinging = swordSwing>0;
+  const swingAng = swinging ? (1-(swordSwing/12))*Math.PI*0.9 : 0;
+
+  // ── Sword ──
+  ctx.save();
+  ctx.translate(x+28, y+22);
+  ctx.rotate(swinging ? -swingAng : -0.3);
+  // Blade
+  ctx.fillStyle='#b8b8c8'; ctx.beginPath();
+  ctx.moveTo(-2,-30); ctx.lineTo(2,-30); ctx.lineTo(3,2); ctx.lineTo(-3,2); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#dde'; ctx.fillRect(-1,-29,1.5,28); // fuller shine
+  ctx.strokeStyle='#777'; ctx.lineWidth=1; ctx.beginPath();
+  ctx.moveTo(-2,-30); ctx.lineTo(2,-30); ctx.lineTo(3,2); ctx.lineTo(-3,2); ctx.closePath(); ctx.stroke();
+  ctx.fillStyle='#ffe066'; // tip point
+  ctx.beginPath();ctx.moveTo(-2,-29);ctx.lineTo(2,-29);ctx.lineTo(0,-34);ctx.fill();
+  ctx.fillStyle='#8b6a20'; ctx.strokeStyle='#5a3a00'; ctx.lineWidth=1.5; // crossguard
+  ctx.beginPath();ctx.roundRect(-7,-2,14,4,2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#7a5518'; ctx.strokeStyle='#4a2a00'; ctx.lineWidth=1; // grip
+  ctx.beginPath();ctx.roundRect(-2,2,4,9,2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#aaa'; ctx.beginPath();ctx.arc(0,11,3,0,Math.PI*2);ctx.fill(); // pommel
+  if(swinging){
+    ctx.globalAlpha=0.3; ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.moveTo(-4,-34);ctx.lineTo(4,-34);ctx.lineTo(3,2);ctx.lineTo(-3,2);ctx.fill();
+    ctx.globalAlpha=1;
   }
-  ctx.fillStyle='#e8c520';ctx.fillRect(x+12,y+24,8,8);
-  ctx.fillStyle='#999';ctx.fillRect(x+7,y+1,18,10);
-  ctx.fillStyle='#888';ctx.fillRect(x+7,y+4,18,4);
-  // Coloured plume
-  ctx.fillStyle=cMain;
-  ctx.beginPath();ctx.moveTo(x+13,y+1);ctx.lineTo(x+19,y+1);ctx.lineTo(x+21,y-12);ctx.lineTo(x+15,y-16);ctx.lineTo(x+11,y-10);ctx.closePath();ctx.fill();
-  ctx.fillStyle=cLight;
-  ctx.beginPath();ctx.moveTo(x+15,y+1);ctx.lineTo(x+18,y+1);ctx.lineTo(x+19,y-10);ctx.lineTo(x+15,y-13);ctx.closePath();ctx.fill();
-  // Coloured cape
-  ctx.fillStyle=cMain;
-  ctx.beginPath();ctx.moveTo(x+5,y+14);ctx.lineTo(x+3,y+14);ctx.lineTo(x+1,y+44+(animate&&f>1?4:0));ctx.lineTo(x+8,y+42+(animate&&f>1?6:0));ctx.lineTo(x+8,y+14);ctx.closePath();ctx.fill();
+  ctx.restore();
+
+  // ── Cape (behind body) ──
+  ctx.fillStyle=cMain; ctx.strokeStyle=cDark; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(x+6,y+14);
+  ctx.bezierCurveTo(x+2,y+24, x+0,y+40+(animate&&f>1?4:0), x+4,y+46+(animate&&f>1?6:0));
+  ctx.lineTo(x+9,y+46+(animate&&f>1?5:0));
+  ctx.bezierCurveTo(x+8,y+38, x+9,y+22, x+9,y+14);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Cape inner shadow
   ctx.fillStyle=cDark;
-  ctx.beginPath();ctx.moveTo(x+6,y+16);ctx.lineTo(x+4,y+16);ctx.lineTo(x+2,y+42+(animate&&f>1?3:0));ctx.lineTo(x+6,y+40+(animate&&f>1?5:0));ctx.closePath();ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x+7,y+16);
+  ctx.bezierCurveTo(x+4,y+26,x+3,y+40,x+6,y+44+(animate&&f>1?4:0));
+  ctx.lineTo(x+8,y+42+(animate&&f>1?4:0));
+  ctx.bezierCurveTo(x+7,y+34,x+7,y+22,x+8,y+16);
+  ctx.closePath(); ctx.fill();
+
+  // ── Armour body ──
+  // Torso plate
+  ctx.fillStyle='#b0b0b8'; ctx.strokeStyle='#555'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(x+5,y+16,22,30,4); ctx.fill(); ctx.stroke();
+  // Chest highlight
+  ctx.fillStyle='rgba(255,255,255,0.22)';
+  ctx.beginPath(); ctx.ellipse(x+16,y+24,7,9,0,0,Math.PI*2); ctx.fill();
+  // Surcoat emblem (coloured diamond)
+  ctx.fillStyle=cMain; ctx.strokeStyle=cDark; ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.moveTo(x+16,y+22); ctx.lineTo(x+21,y+27); ctx.lineTo(x+16,y+32); ctx.lineTo(x+11,y+27);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  // Belt
+  ctx.fillStyle='#5a3a10'; ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(x+5,y+43,22,5,2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#ffe066'; // buckle
+  ctx.beginPath(); ctx.roundRect(x+13,y+42,6,6,1); ctx.fill();
+
+  // Left arm
+  ctx.fillStyle='#a8a8b0'; ctx.strokeStyle='#555'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(x+0,y+18,7,20+(animate&&!swinging&&f>1?3:0),3); ctx.fill(); ctx.stroke();
+  // Right arm — raised when swinging
+  if(swinging){
+    ctx.beginPath(); ctx.roundRect(x+22,y+14,8,14,3); ctx.fill(); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.roundRect(x+24,y+18,7,20+(animate&&f<2?3:0),3); ctx.fill(); ctx.stroke();
+  }
+  // Gauntlets
+  ctx.fillStyle='#909098'; ctx.strokeStyle='#444'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.roundRect(x-1,y+36,8,7,3); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(x+24,y+36+(swinging?-20:0),7,7,3); ctx.fill(); ctx.stroke();
+
+  // Legs
+  ctx.fillStyle='#a0a0a8'; ctx.strokeStyle='#555'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(x+6,y+47,10,animate?(f<2?20:15):20,3); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(x+17,y+47,10,animate?(f<2?15:20):20,3); ctx.fill(); ctx.stroke();
+  // Sabatons (armoured feet)
+  ctx.fillStyle='#888890'; ctx.strokeStyle='#444'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.roundRect(x+4,y+47+(animate?f<2?20:15:20),13,6,2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(x+16,y+47+(animate?f<2?15:20:20),13,6,2); ctx.fill(); ctx.stroke();
+
+  // ── HELMET — proper great helm / bascinet style ──
+  const hx=x+5, hy=y-4;
+  const hw=22, hh=24;
+
+  // Gorget (neck guard — overlaps body top)
+  ctx.fillStyle='#a0a0a8'; ctx.strokeStyle='#444'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(x+6,y+13,20,7,2); ctx.fill(); ctx.stroke();
+
+  // Skull (rounded dome)
+  ctx.fillStyle='#b0b0b8'; ctx.strokeStyle='#444'; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(hx,hy+hh);
+  ctx.lineTo(hx,hy+10);
+  ctx.bezierCurveTo(hx,hy+2, hx+3,hy, hx+hw/2,hy);
+  ctx.bezierCurveTo(hx+hw-3,hy, hx+hw,hy+2, hx+hw,hy+10);
+  ctx.lineTo(hx+hw,hy+hh);
+  ctx.closePath();
+  ctx.fill(); ctx.stroke();
+
+  // Dome highlight
+  ctx.fillStyle='rgba(255,255,255,0.2)';
+  ctx.beginPath(); ctx.ellipse(hx+hw*0.38,hy+7,5,4,-.3,0,Math.PI*2); ctx.fill();
+
+  // Visor face plate (flat lower half)
+  ctx.fillStyle='#a8a8b2'; ctx.strokeStyle='#444'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(hx+1,hy+hh*0.38,hw-2,hh*0.62,3); ctx.fill(); ctx.stroke();
+
+  // T-shaped visor opening
+  // Horizontal eye slit
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.roundRect(hx+3,hy+hh*0.42,hw-6,4,2); ctx.fill();
+  // Vertical nasal bar splits the slit
+  ctx.fillStyle='#a8a8b2'; ctx.strokeStyle='#444'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(hx+hw/2-2,hy+hh*0.38,4,hh*0.62,1); ctx.fill(); ctx.stroke();
+  // Breathing holes (lower half)
+  ctx.fillStyle='#1a1a1a';
+  for(let hi2=0;hi2<3;hi2++){
+    ctx.beginPath(); ctx.ellipse(hx+6+hi2*4, hy+hh*0.74, 1.5, 1, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(hx+hw-6-hi2*4, hy+hh*0.74, 1.5, 1, 0, 0, Math.PI*2); ctx.fill();
+  }
+  // Visor chin
+  ctx.fillStyle='#b0b0b8'; ctx.strokeStyle='#555'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(hx+2,hy+hh-5,hw-4,6,3); ctx.fill(); ctx.stroke();
+
+  // Rivets on visor edge
+  ctx.fillStyle='#777';
+  [[hx+4,hy+hh*0.38+2],[hx+hw-4,hy+hh*0.38+2]].forEach(([rx,ry])=>{
+    ctx.beginPath();ctx.arc(rx,ry,2,0,Math.PI*2);ctx.fill();
+  });
+
+  // ── Plume (feathers out the back/top) ──
+  ctx.save();
+  ctx.translate(hx+hw*0.5, hy+2);
+  // Plume base
+  for(let p2=0;p2<6;p2++){
+    const spread=(p2-(5/2))*0.22;
+    const len=20+Math.abs(p2-2.5)*2;
+    ctx.strokeStyle=p2<3?cMain:cLight;
+    ctx.lineWidth=3-Math.abs(p2-2.5)*0.4;
+    ctx.lineCap='round';
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.quadraticCurveTo(spread*len*0.8, -len*0.6, spread*len, -len);
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
 function roundRect(x,y,w,h,r){
@@ -1470,10 +2254,11 @@ function drawPrincess(){
   // Charge glow on horn
   if(chargeBeam.level>20){
     const glow=chargeBeam.level/chargeBeam.maxLevel;
-    ctx.globalAlpha*=(0.3+glow*0.6);
+    const prevAlpha=ctx.globalAlpha;
+    ctx.globalAlpha=prevAlpha*(0.3+glow*0.6);
     ctx.fillStyle=RAINBOW_COLS[Math.floor(gFrame*0.3)%7];
     ctx.beginPath();ctx.ellipse(ox+38,y+2,10+glow*14,10+glow*14,0,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=inv?0.35:1;
+    ctx.globalAlpha=prevAlpha;
   }
   // Mane
   const mC=['#ff80aa','#ffaa44','#ffee44','#44ee88','#44aaff','#aa44ff'];
@@ -1581,73 +2366,206 @@ function drawEnemies(){
     ctx.save();
     if(flip){ctx.translate(sx+e.w,0);ctx.scale(-1,1);}
     const ox=flip?0:sx;
+    // yOff anchors the sprite to the feet (e.y+e.h), so increasing h
+    // makes the character taller upward, never floating off the ground.
+    // Each sprite's visual feet are ~8px from the bottom of their drawn area.
+    // For ground sprites, anchor feet to e.y+e.h. Aerial/puffer use raw e.y.
+    const isAerial2=e.type==='fire_imp'||e.type==='ice_shard'||e.type==='winged_lady';
+    const isGroundSprite=!isAerial2&&e.type!=='spore_puffer'&&e.type!=='boulder';
+    const ey=isGroundSprite?(e.y+(e.h-56)):e.y;
 
-    if(e.type==='winged_lady'){
-      // Bat-winged woman: green skin, dark dress, leathery wings, hurls javelins
-      const ew=e.wobble||0;
-      const wflap=Math.sin(gFrame*0.25+ew)*20;
-      // Leathery wings (behind body)
-      ctx.fillStyle='#3d1a05';
-      ctx.save();ctx.translate(ox+18,e.y+20);ctx.rotate(-wflap*0.055);
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-26,-14);ctx.lineTo(-30,10);ctx.lineTo(-4,16);ctx.closePath();ctx.fill();ctx.restore();
-      ctx.save();ctx.translate(ox+18,e.y+20);ctx.rotate(wflap*0.055);
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(26,-14);ctx.lineTo(30,10);ctx.lineTo(4,16);ctx.closePath();ctx.fill();ctx.restore();
-      ctx.fillStyle='#5a2a0a';
-      ctx.save();ctx.translate(ox+18,e.y+20);ctx.rotate(-wflap*0.04);
-      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-18,-6);ctx.lineTo(-20,6);ctx.lineTo(-2,10);ctx.closePath();ctx.fill();ctx.restore();
-      // Body — dark dress
-      ctx.fillStyle='#280840';ctx.fillRect(ox+8,e.y+18,20,24);
-      ctx.fillStyle='#3a1060';ctx.fillRect(ox+9,e.y+20,18,10);
-      // Green skin
-      ctx.fillStyle='#6ab820';ctx.fillRect(ox+10,e.y+6,14,14);
-      ctx.beginPath();ctx.ellipse(ox+17,e.y+3,8,9,0,0,Math.PI*2);ctx.fill();
-      // Wild dark hair
-      ctx.fillStyle='#1a0828';ctx.fillRect(ox+9,e.y-3,16,8);ctx.fillRect(ox+7,e.y+1,4,10);ctx.fillRect(ox+23,e.y+1,4,10);
-      // Glowing red eyes
-      ctx.fillStyle='#ff1a00';ctx.fillRect(ox+13,e.y+1,3,3);ctx.fillRect(ox+20,e.y+1,3,3);
-      ctx.fillStyle='#ff7700';ctx.fillRect(ox+14,e.y+2,2,2);ctx.fillRect(ox+21,e.y+2,2,2);
-      // Arms
-      ctx.fillStyle='#6ab820';ctx.fillRect(ox+4,e.y+18,7,f?18:14);ctx.fillRect(ox+25,e.y+18,7,f?14:18);
-      // Javelin (in hand)
-      ctx.fillStyle='#8b7040';ctx.fillRect(ox+26,e.y+12,3,28);ctx.fillStyle='#ccc';ctx.fillRect(ox+25,e.y+10,5,8);
-      // Legs
-      ctx.fillStyle='#280840';ctx.fillRect(ox+10,e.y+40,8,f?14:10);ctx.fillRect(ox+18,e.y+40,8,f?10:14);
+    // ── Aerial enemies ──
+    const ew=e.wobble||0;
+    const wf=Math.sin(gFrame*0.28+ew)*20;
+    if(e.type==='fire_imp'||e.type==='winged_lady'){
+      // Cartoon bat-winged creature
+      const wx=ox+e.w/2, wy=e.y;
+      // Wings
+      ctx.fillStyle=e.type==='fire_imp'?'#8b1a00':'#3d1a05';
+      ctx.strokeStyle='#111';ctx.lineWidth=1.5;
+      ctx.save();ctx.translate(wx,wy+16);ctx.rotate(-wf*0.06);
+      ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-15,-10,-28,-6,-30,12);ctx.lineTo(-5,14);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+      ctx.save();ctx.translate(wx,wy+16);ctx.rotate(wf*0.06);
+      ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(15,-10,28,-6,30,12);ctx.lineTo(5,14);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+      if(e.type==='fire_imp'){
+        cEl(wx,wy+18,12,15,'#cc2200','#111',2);
+        cEl(wx,wy+10,8,9,'#ff6622','#111',2);
+        cEl(wx-3,wy+8,2.5,2.5,'#111');cEl(wx+3,wy+8,2.5,2.5,'#111');
+        cEl(wx-3,wy+8,1,1,'#ff0');cEl(wx+3,wy+8,1,1,'#ff0');
+        ctx.fillStyle='#ff9900';ctx.beginPath();ctx.moveTo(wx-3,wy+2);ctx.quadraticCurveTo(wx,wy-8,wx+3,wy+2);ctx.fill();
+        ctx.fillStyle='#ffe066';ctx.beginPath();ctx.moveTo(wx-1.5,wy+3);ctx.quadraticCurveTo(wx,wy-3,wx+1.5,wy+3);ctx.fill();
+      } else {
+        cRR(ox+8,e.y+16,18,22,4,'#280840','#111',2);
+        cEl(wx,e.y+8,9,10,'#5a9a18','#222',2);
+        ctx.fillStyle='#1a0828';ctx.beginPath();ctx.ellipse(wx,e.y+2,9,7,0,0,Math.PI*2);ctx.fill();
+        cEl(wx-3,e.y+5,2,2,'#ff2200');cEl(wx+3,e.y+5,2,2,'#ff2200');
+        ctx.strokeStyle='#8b7040';ctx.lineWidth=3;
+        ctx.beginPath();ctx.moveTo(ox+24,e.y+10);ctx.lineTo(ox+26,e.y+36);ctx.stroke();
+        ctx.fillStyle='#bbb';ctx.beginPath();ctx.moveTo(ox+22,e.y+9);ctx.lineTo(ox+28,e.y+9);ctx.lineTo(ox+25,e.y+3);ctx.fill();
+      }
       ctx.restore();
-      if(e.hp<e.maxHp){ctx.fillStyle='#300';ctx.fillRect(sx,e.y-8,e.w,5);ctx.fillStyle='#a855f7';ctx.fillRect(sx,e.y-8,e.w*(e.hp/e.maxHp),5);}
+      if(e.hp<e.maxHp) drawHPBar(sx,e.y-10,e.w,e.hp,e.maxHp,'#cc44ff');
       return;
     }
+    if(e.type==='ice_shard'){
+      const wx=ox+e.w/2, wy=e.y;
+      ctx.globalAlpha=0.25+Math.sin(gFrame*0.1+ew)*0.1;
+      cEl(wx,wy+16,16,20,'#aaeeff');ctx.globalAlpha=1;
+      ctx.fillStyle='#cceeff';ctx.strokeStyle='#0088cc';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(wx,wy);ctx.lineTo(wx+9,wy+12);ctx.lineTo(wx+7,wy+30);
+      ctx.lineTo(wx,wy+33);ctx.lineTo(wx-7,wy+30);ctx.lineTo(wx-9,wy+12);ctx.closePath();
+      ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,0.55)';ctx.beginPath();ctx.moveTo(wx-1,wy+2);ctx.lineTo(wx+3,wy+10);ctx.lineTo(wx+2,wy+25);ctx.closePath();ctx.fill();
+      cEl(wx-3,wy+11,2,2,'#004488');cEl(wx+3,wy+11,2,2,'#004488');
+      ctx.restore();
+      if(e.hp<e.maxHp) drawHPBar(sx,e.y-10,e.w,e.hp,e.maxHp,'#88aaff');
+      return;
+    }
+
+    // ── Spore puffer ──
+    if(e.type==='spore_puffer'){
+      const pc=e.hp/e.maxHp;
+      cEl(ox+17,e.y+17,16,16,pc>0.5?'#66bb44':'#cc8822','#333',2.5);
+      cEl(ox+10,e.y+12,3.5,3.5,'rgba(255,255,255,0.45)');
+      cEl(ox+22,e.y+14,2.5,2.5,'rgba(255,255,255,0.45)');
+      cEl(ox+13,e.y+10,2.5,2.5,'#111');cEl(ox+21,e.y+10,2.5,2.5,'#111');
+      cEl(ox+13,e.y+10,1.2,1.2,'#f00');cEl(ox+21,e.y+10,1.2,1.2,'#f00');
+      cRR(ox+9,e.y+30,6,8,3,'#557733','#222',1.5);cRR(ox+19,e.y+30,6,8,3,'#557733','#222',1.5);
+      ctx.restore();if(e.hp<e.maxHp)drawHPBar(sx,e.y-10,e.w,e.hp,e.maxHp,'#66bb44');return;
+    }
+
+    // ── Rock golem ──
+    if(e.type==='rock_golem'){
+      // Unified body (head+torso merged, no gap)
+      cRR(ox+4,ey+4,36,50,6,'#8a7a6a','#333',2.5);   // full body
+      cRR(ox+6,ey+4,32,16,5,'#9a8a7a',null);           // head highlight (same Y)
+      // Molten cracks
+      ctx.strokeStyle='#ff6600';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+14,ey+20);ctx.lineTo(ox+20,ey+32);ctx.lineTo(ox+12,ey+40);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ox+26,ey+16);ctx.lineTo(ox+22,ey+28);ctx.lineTo(ox+28,ey+38);ctx.stroke();
+      // Eyes
+      cEl(ox+15,ey+12,3.5,3.5,'#ff8800');cEl(ox+25,ey+12,3.5,3.5,'#ff8800');
+      cEl(ox+15,ey+12,1.5,1.5,'#ff0');cEl(ox+25,ey+12,1.5,1.5,'#ff0');
+      // Arms
+      cRR(ox-4,ey+22,12,18,3,'#7a6a5a','#333',2);cRR(ox+36,ey+22,12,18,3,'#7a6a5a','#333',2);
+      // Legs
+      cRR(ox+8,ey+52,14,f?16:12,4,'#6a5a4a','#222',2);cRR(ox+22,ey+52,14,f?12:16,4,'#6a5a4a','#222',2);
+      ctx.restore();if(e.hp<e.maxHp)drawHPBar(sx,ey-10,e.w,e.hp,e.maxHp,'#ff6600');return;
+    }
+
+    // ── Yeti ──
+    if(e.type==='yeti'){
+      // Single unified body (head smoothly connected to torso)
+      cRR(ox+4,ey+2,40,60,10,'#ddeeff','#556677',2.5);   // full body+head
+      cRR(ox+6,ey+2,36,22,9,'#eef8ff',null);               // head highlight only
+      // Eyes
+      cEl(ox+18,ey+12,4,4,'#1a1a2a');cEl(ox+28,ey+12,4,4,'#1a1a2a');
+      cEl(ox+18,ey+12,2,2,'#88aaff');cEl(ox+28,ey+12,2,2,'#88aaff');
+      // Mouth
+      ctx.fillStyle='#334455';ctx.beginPath();ctx.arc(ox+23,ey+22,5,0.2,Math.PI-0.2);ctx.fill();
+      // Arms (huge)
+      cRR(ox-6,ey+22,16,32,5,'#ccdde8','#445566',2);cRR(ox+38,ey+22,16,32,5,'#ccdde8','#445566',2);
+      // Legs
+      cRR(ox+8,ey+60,18,f?18:13,5,'#bbc8d8','#334455',2);cRR(ox+22,ey+60,18,f?13:18,5,'#bbc8d8','#334455',2);
+      ctx.restore();if(e.hp<e.maxHp)drawHPBar(sx,ey-10,e.w,e.hp,e.maxHp,'#88aaff');return;
+    }
+
+    // ── Shadow knight ──
+    if(e.type==='shadow_knight'){
+      const rage=e.hp/e.maxHp<0.4;
+      const sc=rage?'#660066':'#330033';
+      // Shadow cloak (behind)
+      ctx.fillStyle='rgba(80,0,80,0.6)';
+      ctx.beginPath();ctx.moveTo(ox+2,ey+12);ctx.lineTo(ox-5,ey+58);ctx.lineTo(ox+4,ey+58);ctx.lineTo(ox+10,ey+50);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(ox+36,ey+12);ctx.lineTo(ox+43,ey+58);ctx.lineTo(ox+34,ey+58);ctx.lineTo(ox+28,ey+50);ctx.closePath();ctx.fill();
+      // Unified body — head+torso no gap
+      cRR(ox+4,ey+4,30,50,4,sc,'#111',2.5);    // full body
+      cRR(ox+5,ey+4,28,18,4,'#441144',null);     // helmet highlight same Y
+      // Eyes
+      cEl(ox+13,ey+11,3,3,rage?'#ff00ff':'#cc00cc');cEl(ox+21,ey+11,3,3,rage?'#ff00ff':'#cc00cc');
+      // Dark sword
+      ctx.strokeStyle='#8800aa';ctx.lineWidth=4;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ox+36,ey+3);ctx.lineTo(ox+36,ey+38);ctx.stroke();
+      ctx.strokeStyle='#cc44ff';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+30,ey+20);ctx.lineTo(ox+44,ey+20);ctx.stroke();
+      // Legs
+      cRR(ox+6,ey+52,10,f?16:12,3,sc,'#111',2);cRR(ox+22,ey+52,10,f?12:16,3,sc,'#111',2);
+      ctx.restore();if(e.hp<e.maxHp)drawHPBar(sx,ey-10,e.w,e.hp,e.maxHp,'#cc00cc');return;
+    }
+
+    // ── Medium troll / goblin medium ──
+    if(e.type==='troll_medium'||e.type==='goblin_medium'){
+      const gc2=e.type==='goblin_medium'?'#5aba28':'#2a7018';
+      // Unified head+body — everything from ey+2 downward, no raw e.y
+      cRR(ox+4,ey+2,42,62,8,gc2,'#222',3);      // full figure
+      cRR(ox+6,ey+2,38,22,8,gc2,null);           // head region highlight (same Y, no gap)
+      // Ears
+      cEl(ox+4,ey+12,5,6,gc2,'#222',2);cEl(ox+46,ey+12,5,6,gc2,'#222',2);
+      // Eyes
+      cEl(ox+16,ey+10,5,5,'#ff2200','#111',2);cEl(ox+28,ey+10,5,5,'#ff2200','#111',2);
+      cEl(ox+16,ey+10,2.5,2.5,'#ffcc00');cEl(ox+28,ey+10,2.5,2.5,'#ffcc00');
+      // Snout
+      cRR(ox+16,ey+16,18,10,4,'#88cc50','#222',2);
+      // Belt
+      cRR(ox+4,ey+58,42,5,2,'#5a3810','#333',1.5);
+      // Legs
+      cRR(ox+4,ey+62,15,f?18:13,5,gc2,'#222',2);cRR(ox+31,ey+62,15,f?13:18,5,gc2,'#222',2);
+      // Arms
+      cRR(ox-4,ey+22,12,32+(f?4:0),5,gc2,'#222',2);cRR(ox+44,ey+22,12,32+(f?0:4),5,gc2,'#222',2);
+      // Club weapon
+      ctx.strokeStyle='#5a3810';ctx.lineWidth=6;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ox+58,ey+4);ctx.lineTo(ox+58,ey+48);ctx.stroke();
+      cEl(ox+58,ey+4,10,12,'#3a2008','#222',2);cEl(ox+58,ey+4,6,8,'#6a4820',null);
+      ctx.restore();if(e.hp<e.maxHp)drawHPBar(sx,ey-10,e.w,e.hp,e.maxHp,'#0a0');return;
+    }
+
+    // ── Boulder ──
     if(e.type==='boulder'){
       ctx.restore();
-      ctx.fillStyle='#7a6a58';ctx.beginPath();ctx.ellipse(sx+e.w/2,e.y+e.h/2,e.w/2,e.h/2,0,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#9a8a78';ctx.beginPath();ctx.ellipse(sx+e.w/2-4,e.y+e.h/2-4,e.w/4,e.h/4,0,0,Math.PI*2);ctx.fill();
-      return;
+      cEl(sx+e.w/2,e.y+e.h/2,e.w/2,e.h/2,'#7a6a58','#333',3);
+      cEl(sx+e.w/2-4,e.y+e.h/2-4,e.w/5,e.h/5,'#9a8a78');return;
     }
-    if(e.type==='dragon_mini'){
-      ctx.fillStyle='#cc2020';ctx.fillRect(ox+4,e.y+8,40,28);ctx.fillRect(ox+32,e.y+2,18,18);
-      ctx.fillStyle='#ff4400';ctx.fillRect(ox+46,e.y+8,10,8);
-      ctx.fillStyle='#ffff00';ctx.fillRect(ox+38,e.y+4,6,6);ctx.fillStyle='#000';ctx.fillRect(ox+39,e.y+5,4,4);
-      ctx.fillStyle='#880000';ctx.fillRect(ox,e.y+12+(f?8:0),10,8);ctx.fillRect(ox+42,e.y+12+(f?0:8),10,8);
-      ctx.fillStyle='#cc0000';ctx.fillRect(ox+8,e.y+34,12,f?14:10);ctx.fillRect(ox+24,e.y+34,12,f?10:14);
-      ctx.restore();
-      if(e.hp<e.maxHp){ctx.fillStyle='#300';ctx.fillRect(sx,e.y-8,e.w,5);ctx.fillStyle='#f00';ctx.fillRect(sx,e.y-8,e.w*(e.hp/e.maxHp),5);}
-      return;
+
+    // ── Goblin / troll (generic ground enemy) ──
+    const isGoblin=e.type==='goblin_sword'||e.type==='goblin_archer';
+    const gc=isGoblin?'#5aba28':'#3a8018';
+    const gcD=isGoblin?'#3a8a18':'#2a5a10';
+    // Single body shape: head flows into torso, no gap
+    cRR(ox+4,ey+2,26,44,5,gc,'#222',2);         // unified head+torso
+    cRR(ox+4,ey+2,26,16,5,gc,null);              // head top highlight (same Y)
+    // Ears
+    cEl(ox+4,ey+8,3.5,4.5,gc,'#222',2);cEl(ox+30,ey+8,3.5,4.5,gc,'#222',2);
+    // Eyes
+    cEl(ox+11,ey+8,2.5,2.5,'#ff2200');cEl(ox+22,ey+8,2.5,2.5,'#ff2200');
+    cEl(ox+11,ey+8,1.2,1.2,'#ffcc00');cEl(ox+22,ey+8,1.2,1.2,'#ffcc00');
+    // Snout (lower on face, not floating above body)
+    cRR(ox+11,ey+12,12,7,3,'#88cc50','#222',1.5);
+    ctx.fillStyle='#333';cEl(ox+15,ey+15,2,1.5,'#333');cEl(ox+20,ey+15,2,1.5,'#333');
+    // Belt
+    cRR(ox+4,ey+42,26,4,2,'#8b5e2a','#555',1.5);
+    // Legs
+    cRR(ox+5,ey+44,10,f?16:12,3,gcD,'#222',2);cRR(ox+19,ey+44,10,f?12:16,3,gcD,'#222',2);
+    // Arms
+    cRR(ox+0,ey+18,7,20+(f?3:0),3,gc,'#222',2);cRR(ox+27,ey+18,7,20+(f?0:3),3,gc,'#222',2);
+    if(e.type==='goblin_sword'||e.type==='troll_sword'){
+      ctx.strokeStyle='#bbb';ctx.lineWidth=4;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ox+36,ey+4);ctx.lineTo(ox+36,ey+30);ctx.stroke();
+      ctx.strokeStyle='#8b6820';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(ox+30,ey+18);ctx.lineTo(ox+44,ey+18);ctx.stroke();
+      ctx.fillStyle='#ffe066';ctx.beginPath();ctx.moveTo(ox+34,ey+2);ctx.lineTo(ox+38,ey+2);ctx.lineTo(ox+36,ey-2);ctx.fill();
+    } else if(e.type==='goblin_archer'||e.type==='troll_archer'||e.type==='ice_archer'){
+      ctx.strokeStyle='#8b6820';ctx.lineWidth=3;ctx.lineCap='round';
+      ctx.beginPath();ctx.arc(ox+36,ey+14,12,-0.9,0.9);ctx.stroke();
+      ctx.strokeStyle='#ccc';ctx.lineWidth=1.5;
+      const by1=ey+14+12*Math.sin(-0.9), by2=ey+14+12*Math.sin(0.9);
+      ctx.beginPath();ctx.moveTo(ox+36+12*Math.cos(-0.9),by1);ctx.lineTo(ox+36+12*Math.cos(0.9),by2);ctx.stroke();
+    } else if(e.type==='troll_axe'){
+      ctx.strokeStyle='#7a6040';ctx.lineWidth=5;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(ox+36,ey+4);ctx.lineTo(ox+36,ey+30);ctx.stroke();
+      ctx.fillStyle='#aaa';ctx.strokeStyle='#333';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ox+36,ey+4);ctx.lineTo(ox+50,ey+12);ctx.lineTo(ox+50,ey+24);ctx.lineTo(ox+36,ey+22);ctx.closePath();ctx.fill();ctx.stroke();
     }
-    // Troll
-    ctx.fillStyle='#4a7a30';ctx.fillRect(ox+6,e.y+16,26,28);ctx.fillRect(ox+4,e.y+2,28,18);
-    ctx.fillRect(ox,e.y+4,6,10);ctx.fillRect(ox+30,e.y+4,6,10);
-    ctx.fillStyle='#ff2200';ctx.fillRect(ox+9,e.y+6,7,5);ctx.fillRect(ox+22,e.y+6,7,5);
-    ctx.fillStyle='#ff8800';ctx.fillRect(ox+10,e.y+7,4,3);ctx.fillRect(ox+23,e.y+7,4,3);
-    ctx.fillStyle='#3a6020';ctx.fillRect(ox+13,e.y+11,8,6);
-    ctx.fillStyle='#fffde0';ctx.fillRect(ox+10,e.y+16,5,9);ctx.fillRect(ox+23,e.y+16,5,9);
-    ctx.fillStyle='#4a7a30';ctx.fillRect(ox+0,e.y+18,8,18+(f?4:0));ctx.fillRect(ox+30,e.y+18,8,18+(f?0:4));
-    ctx.fillRect(ox+8,e.y+42,10,f?14:10);ctx.fillRect(ox+20,e.y+42,10,f?10:14);
-    ctx.fillStyle='#8b5e2a';ctx.fillRect(ox+6,e.y+42,26,4);
-    if(e.type==='troll_sword'){ctx.fillStyle='#ccc';ctx.fillRect(ox+36,e.y+8,5,28);ctx.fillStyle='#8b5e2a';ctx.fillRect(ox+33,e.y+20,11,5);ctx.fillStyle='#ffe066';ctx.fillRect(ox+37,e.y+6,4,4);}
-    else if(e.type==='troll_axe'){ctx.fillStyle='#8b7355';ctx.fillRect(ox+36,e.y+6,4,26);ctx.fillStyle='#aaa';ctx.fillRect(ox+36,e.y+6,16,18);ctx.fillStyle='#888';ctx.fillRect(ox+36,e.y+6,5,18);}
-    else if(e.type==='troll_archer'){ctx.fillStyle='#8b7355';ctx.fillRect(ox+34,e.y+8,3,28);ctx.fillStyle='#ccc';ctx.fillRect(ox+32,e.y+12,7,4);}
-    else if(e.type==='troll_javelin'){ctx.fillStyle='#8b7355';ctx.fillRect(ox+34,e.y+4,4,32);ctx.fillStyle='#ccc';ctx.fillRect(ox+33,e.y+2,6,8);}
     ctx.restore();
-    if(e.hp<e.maxHp){ctx.fillStyle='#300';ctx.fillRect(sx+2,e.y-8,e.w-4,5);ctx.fillStyle='#0c0';ctx.fillRect(sx+2,e.y-8,(e.w-4)*(e.hp/e.maxHp),5);}
+    if(e.hp<e.maxHp) drawHPBar(sx+2,e.y-8,e.w-4,e.hp,e.maxHp,'#44bb22');
   });
 }
 
@@ -1655,109 +2573,130 @@ function drawEnemies(){
 function drawBoss(){
   if(!boss||!boss.alive) return;
   const bsx=Math.floor(boss.x-worldX), by=Math.floor(boss.y), f=boss.animF, rage=boss.enraged;
-  // HP Bar
-  ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(W/2-130,5,260,16);
-  ctx.fillStyle=rage?'#ff1100':'#880000';
-  ctx.fillRect(W/2-128,7,Math.floor(254*(boss.hp/boss.maxHp)),12);
-  ctx.fillStyle='#fff';ctx.font='bold 9px Nunito';ctx.textAlign='center';
-  const bLabel={troll_boss:'TROLL KING',witch_boss:'DARK WITCH',dragon_boss:'DRAGON EMPEROR',ice_boss:'ICE QUEEN',evil_king:'⚔ EVIL KING ⚔'}[boss.type]||'BOSS';
-  ctx.fillText(bLabel,W/2,17);
-  // Shield aura
-  if(boss.shielding){
-    ctx.globalAlpha=0.28+Math.sin(gFrame*0.15)*0.14;
-    ctx.fillStyle='#4466ff';ctx.beginPath();ctx.ellipse(bsx+boss.w/2,by+boss.h/2,boss.w*0.7,boss.h*0.6,0,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
-    ctx.strokeStyle='#88aaff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(bsx+boss.w/2,by+boss.h/2,boss.w*0.7,boss.h*0.6,0,0,Math.PI*2);ctx.stroke();ctx.lineWidth=1;
-  }
+  // Boss HP bar — cartoon style
+  const bLabel={goblin_chief:'👑 GOBLIN CHIEF',mushroom_witch:'🍄 MUSHROOM WITCH',
+    lava_dragon:'🔥 LAVA DRAGON',ice_queen:'❄️ ICE QUEEN',evil_king:'⚔ EVIL KING',
+    troll_boss:'TROLL KING',witch_boss:'DARK WITCH',dragon_boss:'DRAGON',ice_boss:'ICE QUEEN'}[boss.type]||'BOSS';
+  ctx.fillStyle='rgba(0,0,0,0.7)';cRR(W/2-140,4,280,22,8,null,null);ctx.fill();
+  const hpPct=boss.hp/boss.maxHp;
+  ctx.fillStyle=rage?'#ff2200':(hpPct>0.5?'#880000':'#cc2200');
+  cRR(W/2-136,7,Math.max(0,272*hpPct),16,5,null,null);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=1;cRR(W/2-140,4,280,22,8,null,null);ctx.stroke();
+  ctx.fillStyle='#fff';ctx.font='bold 10px Nunito,sans-serif';ctx.textAlign='center';
+  ctx.shadowColor='#000';ctx.shadowBlur=4;ctx.fillText(bLabel,W/2,20);ctx.shadowBlur=0;
+
   const flip=boss.facing>0;
-  ctx.save();
-  if(flip){ctx.translate(bsx+boss.w,0);ctx.scale(-1,1);}
+  ctx.save();if(flip){ctx.translate(bsx+boss.w,0);ctx.scale(-1,1);}
   const ox=flip?0:bsx;
 
-  if(boss.type==='troll_boss'){
-    const bc=rage?'#cc3300':'#3a6020';
-    ctx.fillStyle=bc;ctx.fillRect(ox+8,by+24,72,60);ctx.fillRect(ox+14,by+6,60,28);
-    ctx.fillStyle='#ffe066';ctx.fillRect(ox+10,by-4,68,14);ctx.fillRect(ox+10,by-14,12,12);ctx.fillRect(ox+40,by-18,14,16);ctx.fillRect(ox+66,by-14,12,12);
-    ctx.fillStyle='#ff0000';ctx.fillRect(ox+43,by-16,8,8);
-    ctx.fillStyle=rage?'#ffff00':'#ff3300';ctx.fillRect(ox+22,by+12,14,10);ctx.fillRect(ox+52,by+12,14,10);
-    ctx.fillStyle='#222';ctx.fillRect(ox+24,by+13,10,8);ctx.fillRect(ox+54,by+13,10,8);
-    ctx.fillStyle='#fffde0';ctx.fillRect(ox+18,by+26,12,18);ctx.fillRect(ox+58,by+26,12,18);
-    ctx.fillStyle='#2a5015';ctx.fillRect(ox+20,by+30,48,16);
-    ctx.fillStyle='#880000';ctx.fillRect(ox,by+24,14,60);ctx.fillRect(ox+74,by+24,14,60);
-    ctx.fillStyle=bc;ctx.fillRect(ox+0,by+26,14,30+(f?6:0));ctx.fillRect(ox+74,by+26,14,30+(f?0:6));
-    ctx.fillRect(ox+14,by+82,24,f?22:16);ctx.fillRect(ox+50,by+82,24,f?16:22);
-    ctx.fillStyle='#7a5a2a';ctx.fillRect(ox+82,by-14,10,70);ctx.fillStyle='#6a4a1a';ctx.fillRect(ox+78,by-14,18,18);
-    ctx.fillStyle='#888';for(let s=0;s<3;s++)ctx.fillRect(ox+80,by-10+s*14,14,4);
+  if(boss.type==='goblin_chief'||boss.type==='troll_boss'){
+    const bc=rage?'#cc3300':'#44a820';
+    cRR(ox+6,by+18,76,68,12,bc,'#222',3);
+    cRR(ox+14,by+0,60,30,10,bc,'#222',3);
+    cEl(ox+14,by+12,6,8,bc,'#222',2);cEl(ox+74,by+12,6,8,bc,'#222',2);
+    ctx.fillStyle='#ffe066';ctx.strokeStyle='#aa8800';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(ox+14,by-4);ctx.lineTo(ox+74,by-4);ctx.lineTo(ox+74,by+6);
+    ctx.lineTo(ox+60,by+2);ctx.lineTo(ox+50,by+10);ctx.lineTo(ox+40,by+2);ctx.lineTo(ox+28,by+10);
+    ctx.lineTo(ox+18,by+2);ctx.lineTo(ox+14,by+6);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#ff4488';cEl(ox+50,by+0,4.5,4.5,'#ff4488');
+    cEl(ox+28,by+11,5.5,5.5,'#ff2200','#111',2);cEl(ox+56,by+11,5.5,5.5,'#ff2200','#111',2);
+    cEl(ox+28,by+11,2.5,2.5,rage?'#ffff00':'#ffcc00');cEl(ox+56,by+11,2.5,2.5,rage?'#ffff00':'#ffcc00');
+    cRR(ox+30,by+17,28,14,6,'#66bb44','#222',2);
+    ctx.fillStyle='#333';cEl(ox+37,by+22,3,2.5,'#333');cEl(ox+47,by+22,3,2.5,'#333');
+    cRR(ox+6,by+78,76,8,3,'#8b5e2a','#333',2);
+    cRR(ox+14,by+84,24,f?22:16,6,'#338a14','#222',2);cRR(ox+50,by+84,24,f?16:22,6,'#338a14','#222',2);
+    cRR(ox-2,by+22,16,36+(f?5:0),6,bc,'#222',2);cRR(ox+74,by+22,16,36+(f?0:5),6,bc,'#222',2);
+    ctx.strokeStyle='#7a5020';ctx.lineWidth=9;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+90,by+14);ctx.lineTo(ox+90,by+62);ctx.stroke();
+    cRR(ox+82,by+4,22,26,5,'#6a4018','#333',2.5);
+    for(let i=0;i<4;i++){ctx.strokeStyle='#aaa';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(ox+84+i*5,by+4);ctx.lineTo(ox+83+i*5,by-2);ctx.stroke();}
+
+  } else if(boss.type==='mushroom_witch'||boss.type==='witch_boss'){
+    const wc=rage?'#7a1a8a':'#4a0a6a';
+    cRR(ox+10,by-10,68,18,4,'#cc2020','#111',3);cRR(ox+22,by-36,44,30,5,'#cc2020','#111',3);
+    cEl(ox+30,by-24,5,5,'rgba(255,255,255,0.8)');cEl(ox+50,by-30,3.5,3.5,'rgba(255,255,255,0.8)');cEl(ox+44,by-20,4,4,'rgba(255,255,255,0.7)');
+    ctx.fillStyle=wc;ctx.strokeStyle='#111';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(ox+6,by+16);ctx.bezierCurveTo(ox-8,by+52,ox-6,by+82,ox+10,by+90);ctx.lineTo(ox+78,by+90);ctx.bezierCurveTo(ox+94,by+82,ox+96,by+52,ox+82,by+16);ctx.closePath();ctx.fill();ctx.stroke();
+    cRR(ox+18,by+6,52,38,8,wc,'#111',2);
+    cEl(ox+44,by+4,18,20,'#c0a080','#111',2);
+    cEl(ox+34,by+0,4.5,5,'#ffdd00','#111',2);cEl(ox+54,by+0,4.5,5,'#ffdd00','#111',2);
+    cEl(ox+34,by+0,2,2,'#000');cEl(ox+54,by+0,2,2,'#000');
+    cEl(ox+40,by+6,6,4,'#c0a080','#666',1.5);
+    ctx.strokeStyle='#664422';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(ox+44,by+10,8,0.2,Math.PI-0.2);ctx.stroke();
+    ctx.strokeStyle='#5a3a18';ctx.lineWidth=5;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+82,by+8);ctx.lineTo(ox+88,by+90);ctx.stroke();
+    ctx.globalAlpha=0.35+Math.sin(gFrame*0.15)*0.2;cEl(ox+82,by+4,16,16,'rgba(200,100,255,0.4)');ctx.globalAlpha=1;
+    cEl(ox+82,by+4,11,11,'rgba(160,80,255,0.85)','#330066',3);
+    cRR(ox+4,by+18,16,28+(f?4:0),5,wc,'#111',2);cRR(ox+68,by+18,16,28+(f?0:4),5,wc,'#111',2);
+    cEl(ox+12,by+46,8,7,'#c0a080','#111',1.5);cEl(ox+76,by+46,8,7,'#c0a080','#111',1.5);
+
+  } else if(boss.type==='lava_dragon'||boss.type==='dragon_boss'){
+    const dr=rage?'#ff2200':'#cc3300'; const drD=rage?'#881100':'#662200';
+    ctx.strokeStyle=drD;ctx.lineWidth=16;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+8,by+58);ctx.bezierCurveTo(ox-20,by+70,ox-30,by+60,ox-28,by+48);ctx.stroke();
+    ctx.strokeStyle='#ff6600';ctx.lineWidth=8;
+    ctx.beginPath();ctx.moveTo(ox+8,by+58);ctx.bezierCurveTo(ox-16,by+68,ox-24,by+58,ox-22,by+48);ctx.stroke();
+    cRR(ox+8,by+18,80,62,14,dr,'#111',3);cRR(ox+18,by+24,60,40,10,'rgba(255,100,0,0.35)');
+    cRR(ox+52,by+4,30,28,8,dr,'#111',3);cRR(ox+60,by-14,32,22,6,dr,'#111',3);
+    cRR(ox+74,by-10,24,14,5,'#dd4400','#111',2);
+    if(boss.shootCool<14){ctx.globalAlpha=0.75;cEl(ox+104,by-4,22,10,'#ff8800');cEl(ox+104,by-4,12,6,'#ffee00');ctx.globalAlpha=1;}
+    cEl(ox+64,by-10,5.5,5.5,'#ffee00','#111',2);cEl(ox+80,by-10,5.5,5.5,'#ffee00','#111',2);
+    cEl(ox+64,by-10,2.5,2.5,'#111');cEl(ox+80,by-10,2.5,2.5,'#111');
+    ctx.strokeStyle='#884400';ctx.lineWidth=6;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+66,by-18);ctx.lineTo(ox+62,by-32);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox+78,by-18);ctx.lineTo(ox+82,by-32);ctx.stroke();
+    const dw=Math.sin(gFrame*0.22)*22;
+    ctx.fillStyle=drD;ctx.strokeStyle='#111';ctx.lineWidth=2;
+    ctx.save();ctx.translate(ox+40,by+28);ctx.rotate(-dw*0.045);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-30,-18,-56,-10,-60,14);ctx.lineTo(-10,16);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    ctx.save();ctx.translate(ox+50,by+28);ctx.rotate(dw*0.045);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(30,-18,56,-10,60,14);ctx.lineTo(10,16);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    for(let i=0;i<5;i++){ctx.fillStyle='#ff6600';ctx.beginPath();ctx.moveTo(ox+22+i*14,by+18);ctx.lineTo(ox+28+i*14,by+18);ctx.lineTo(ox+25+i*14,by+4+(i%2)*6);ctx.fill();}
+    cRR(ox+14,by+78,22,f?24:18,6,dr,'#111',2);cRR(ox+62,by+78,22,f?18:24,6,dr,'#111',2);
+    cEl(ox+25,by+78+(f?24:18),12,7,drD,'#111',2);cEl(ox+73,by+78+(f?18:24),12,7,drD,'#111',2);
+
+  } else if(boss.type==='ice_queen'||boss.type==='ice_boss'){
+    const ic=rage?'#2255cc':'#2244aa';
+    ctx.fillStyle='rgba(100,180,255,0.25)';ctx.strokeStyle='#6699cc';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(ox+8,by+18);ctx.bezierCurveTo(ox-10,by+55,ox-8,by+90,ox+12,by+100);ctx.lineTo(ox+76,by+100);ctx.bezierCurveTo(ox+96,by+90,ox+98,by+55,ox+80,by+18);ctx.closePath();ctx.fill();ctx.stroke();
+    cRR(ox+18,by+18,52,70,8,ic,'#111',2.5);
+    cEl(ox+44,by+4,22,24,'#ddeeff','#3366aa',2);
+    for(let i=0;i<5;i++){const cx=ox+24+i*12,cy=by-14,h=12+Math.abs(i-2)*4;ctx.fillStyle='rgba(180,220,255,0.9)';ctx.strokeStyle='#88aacc';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(cx-4,by-2);ctx.lineTo(cx,cy-h);ctx.lineTo(cx+4,by-2);ctx.closePath();ctx.fill();ctx.stroke();}
+    ctx.fillStyle='#ffe066';ctx.strokeStyle='#aa8800';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(ox+24,by-4,40,10,3);ctx.fill();ctx.stroke();
+    cEl(ox+34,by+0,4,5,ic,'#111',2);cEl(ox+54,by+0,4,5,ic,'#111',2);
+    cEl(ox+34,by+0,2,2.5,'#aaddff');cEl(ox+54,by+0,2,2.5,'#aaddff');
+    ctx.strokeStyle='#88aacc';ctx.lineWidth=5;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+84,by+16);ctx.lineTo(ox+90,by+80);ctx.stroke();
+    ctx.globalAlpha=0.4+Math.sin(gFrame*0.2)*0.25;cEl(ox+84,by+12,16,16,'rgba(200,240,255,0.3)');ctx.globalAlpha=1;
+    cEl(ox+84,by+12,10,10,'rgba(160,220,255,0.85)','#5588aa',3);
+    cRR(ox+2,by+22,16,32+(f?4:0),5,ic,'#111',2);cRR(ox+70,by+22,16,32+(f?0:4),5,ic,'#111',2);
+    cEl(ox+10,by+52,9,8,'#ddeeff','#3366aa',2);cEl(ox+78,by+52,9,8,'#ddeeff','#3366aa',2);
+
   } else if(boss.type==='evil_king'){
-    // Black knight riding a black dragon
-    // Draw black dragon mount first (behind)
-    const dk='#111118'; const dklit=rage?'#440010':'#1a1a2e';
-    // Dragon body
-    ctx.fillStyle=dk;ctx.fillRect(ox-20,by+55,130,44);ctx.fillRect(ox+60,by+40,40,28);ctx.fillRect(ox+78,by+24,32,22);ctx.fillRect(ox+104,by+28,16,14);
-    ctx.fillStyle=dklit;ctx.fillRect(ox+78,by+26,28,16);
-    ctx.fillStyle=rage?'#aa0000':'#550000';ctx.fillRect(ox+82,by+27,7,8);ctx.fillRect(ox+92,by+27,7,8);
-    ctx.fillStyle='#222';ctx.fillRect(ox+83,by+28,5,6);ctx.fillRect(ox+93,by+28,5,6);
-    // Dragon wings
-    const dw2=Math.sin(gFrame*0.2)*18;
-    ctx.fillStyle='#0a0a14';
-    ctx.save();ctx.translate(ox+40,by+66);ctx.rotate(-dw2*0.04);ctx.fillRect(-44,-12,44,12);ctx.fillRect(-50,-6,14,28);ctx.restore();
-    ctx.save();ctx.translate(ox+50,by+66);ctx.rotate(dw2*0.04);ctx.fillRect(0,-12,44,12);ctx.fillRect(36,-6,14,28);ctx.restore();
-    // Dragon tail
-    ctx.fillStyle=dk;ctx.fillRect(ox-32,by+62,16,16);ctx.fillRect(ox-44,by+68,14,12);ctx.fillRect(ox-54,by+72,12,10);
-    // Dragon legs
-    ctx.fillStyle=dk;ctx.fillRect(ox+10,by+96,20,f?20:14);ctx.fillRect(ox+60,by+96,20,f?14:20);
-    ctx.fillStyle='#333';ctx.fillRect(ox+8,by+96+(f?20:14),8,5);ctx.fillRect(ox+58,by+96+(f?14:20),8,5);
-    // Dragon spines
-    ctx.fillStyle='#222';for(let sp=0;sp<5;sp++)ctx.fillRect(ox+10+sp*11,by+52,6,10-sp);
-    // Now the black knight rider on top
-    const bc='#0a0a14';
-    ctx.fillStyle=bc;ctx.fillRect(ox+6,by+24,88,36);
-    ctx.fillStyle=dklit;ctx.fillRect(ox+14,by+28,72,22);
-    ctx.fillRect(ox+2,by+26,18,16);ctx.fillRect(ox+80,by+26,18,16);
-    ctx.fillStyle='#181830';ctx.fillRect(ox+18,by+4,64,28);
-    // Crown (dark gold with blood-red gem)
-    ctx.fillStyle='#3a3000';ctx.fillRect(ox+12,by-8,76,14);ctx.fillRect(ox+12,by-18,12,12);ctx.fillRect(ox+44,by-24,12,18);ctx.fillRect(ox+74,by-18,12,12);
-    ctx.fillStyle=rage?'#ff0000':'#aa0000';ctx.fillRect(ox+47,by-21,6,8);
-    ctx.fillStyle='#222';ctx.fillRect(ox+22,by+8,56,18);
-    // Eyes
-    ctx.fillStyle=rage?'#ff4400':'#cc0000';ctx.fillRect(ox+28,by+12,16,8);ctx.fillRect(ox+56,by+12,16,8);
-    ctx.fillStyle='#000';ctx.fillRect(ox+30,by+13,12,6);ctx.fillRect(ox+58,by+13,12,6);
-    // Sceptre
-    ctx.fillStyle='#2a2010';ctx.fillRect(ox+90,by-16,6,80);
-    ctx.fillStyle=rage?'#ff2200':'#aa0000';ctx.beginPath();ctx.ellipse(ox+93,by-18,10,10,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=rage?'#ff6655':'#ff3333';ctx.beginPath();ctx.ellipse(ox+93,by-18,5,5,0,0,Math.PI*2);ctx.fill();
-    if(rage){
-      ctx.globalAlpha=0.4+Math.sin(gFrame*0.3)*0.25;
-      ctx.fillStyle='#ff1100';ctx.beginPath();ctx.ellipse(ox+93,by-18,18,18,0,0,Math.PI*2);ctx.fill();
-      ctx.globalAlpha=1;
-    }
-  } else if(boss.type==='witch_boss'||boss.type==='ice_boss'){
-    const wc=boss.type==='ice_boss'?'#1a4a8a':'#2a0a4a';
-    const wc2=boss.type==='ice_boss'?'#88ccff':'#8844cc';
-    ctx.fillStyle=wc;ctx.fillRect(ox+8,by+22,72,58);ctx.fillStyle='#f5c6a0';ctx.fillRect(ox+18,by+4,52,26);
-    ctx.fillStyle=wc;ctx.fillRect(ox+4,by+4,80,12);ctx.fillRect(ox+24,by-28,40,36);ctx.fillRect(ox+28,by-40,32,16);
-    ctx.fillStyle=wc2;ctx.fillRect(ox+4,by+4,80,5);
-    ctx.fillStyle='#ffff00';ctx.fillRect(ox+28,by+10,12,10);ctx.fillRect(ox+48,by+10,12,10);
-    ctx.fillStyle='#000';ctx.fillRect(ox+30,by+11,8,8);ctx.fillRect(ox+50,by+11,8,8);
-    ctx.fillStyle=wc2;ctx.fillRect(ox+30,by-24,8,8);ctx.fillRect(ox+50,by-18,8,8);ctx.fillRect(ox+38,by-36,8,8);
-    ctx.fillStyle='#8b7355';ctx.fillRect(ox+78,by+20,6,60);ctx.fillStyle='#a09070';for(let b2=0;b2<6;b2++)ctx.fillRect(ox+76+b2*2,by+76,4,16);
-    ctx.fillStyle=wc;ctx.fillRect(ox+0,by+24,14,26+(f?4:0));ctx.fillRect(ox+74,by+24,14,26+(f?0:4));
-    ctx.fillStyle='#f5c6a0';ctx.fillRect(ox+0,by+46,14,8);ctx.fillRect(ox+74,by+46,14,8);
-    ctx.fillStyle=wc;ctx.fillRect(ox+4,by+74,80,6+f*4);
-  } else if(boss.type==='dragon_boss'){
-    const dr=rage?'#ff0000':'#aa0000';
-    ctx.fillStyle=dr;ctx.fillRect(ox+4,by+20,88,64);ctx.fillRect(ox+54,by+6,36,22);ctx.fillRect(ox+64,by-8,32,22);
-    ctx.fillRect(ox+90,by-2,18,16);ctx.fillStyle='#ff4400';ctx.fillRect(ox+103,by+2,6,8);
-    ctx.fillStyle='#ffff00';ctx.fillRect(ox+70,by-6,10,10);ctx.fillRect(ox+82,by-6,10,10);
-    ctx.fillStyle='#000';ctx.fillRect(ox+71,by-5,8,8);ctx.fillRect(ox+83,by-5,8,8);
-    const dw=Math.sin(gFrame*0.2)*20;
-    ctx.fillStyle='#660000';
-    ctx.save();ctx.translate(ox+40,by+30);ctx.rotate(-dw*0.04);ctx.fillRect(-50,-14,50,14);ctx.fillRect(-58,-8,14,30);ctx.restore();
-    ctx.save();ctx.translate(ox+50,by+30);ctx.rotate(dw*0.04);ctx.fillRect(0,-14,50,14);ctx.fillRect(44,-8,14,30);ctx.restore();
-    ctx.fillStyle='#ffcc00';for(let s=0;s<6;s++)ctx.fillRect(ox+10+s*12,by+16,8,12-s);
-    ctx.fillStyle=dr;ctx.fillRect(ox-16,by+40,20,18);ctx.fillRect(ox-28,by+48,16,14);ctx.fillRect(ox-38,by+54,12,10);
-    ctx.fillRect(ox+10,by+82,24,f?26:18);ctx.fillRect(ox+60,by+82,24,f?18:26);
-    ctx.fillStyle='#888';ctx.fillRect(ox+8,by+82+(f?26:18),10,6);ctx.fillRect(ox+58,by+82+(f?18:26),10,6);
+    const dk='#0e0e1e'; const dkL=rage?'#660022':'#22003a';
+    ctx.strokeStyle='#111';ctx.lineWidth=14;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+12,by+88);ctx.bezierCurveTo(ox-22,by+100,ox-34,by+88,ox-30,by+72);ctx.stroke();
+    ctx.strokeStyle='#330033';ctx.lineWidth=7;
+    ctx.beginPath();ctx.moveTo(ox+12,by+88);ctx.bezierCurveTo(ox-18,by+98,ox-28,by+88,ox-24,by+72);ctx.stroke();
+    cRR(ox+0,by+62,100,40,12,dk,'#111',3);cRR(ox+12,by+68,76,24,8,'#1a0028');
+    cRR(ox+52,by+46,34,26,8,dk,'#111',3);cRR(ox+58,by+32,36,20,7,dk,'#111',3);
+    cRR(ox+72,by+34,26,12,5,'#1a001a','#111',2);
+    cEl(ox+64,by+33,4,4,'#cc00cc','#111',1.5);cEl(ox+76,by+33,4,4,'#cc00cc','#111',1.5);
+    const dw2=Math.sin(gFrame*0.22)*20;
+    ctx.fillStyle='#0a0018';ctx.strokeStyle='#220033';ctx.lineWidth=2;
+    ctx.save();ctx.translate(ox+38,by+72);ctx.rotate(-dw2*0.05);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-28,-16,-52,-8,-54,14);ctx.lineTo(-8,14);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    ctx.save();ctx.translate(ox+52,by+72);ctx.rotate(dw2*0.05);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(28,-16,52,-8,54,14);ctx.lineTo(8,14);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    cRR(ox+14,by+100,20,f?18:13,5,dk,'#111',2);cRR(ox+62,by+100,20,f?13:18,5,dk,'#111',2);
+    cRR(ox+18,by+22,62,44,8,dk,'#111',3);cRR(ox+24,by+28,50,28,6,dkL,'#111',2);
+    cRR(ox+4,by+26,16,32+(f?4:0),6,dk,'#111',2);cRR(ox+78,by+26,16,32+(f?0:4),6,dk,'#111',2);
+    cRR(ox+26,by+2,46,28,6,dk,'#111',3);
+    ctx.strokeStyle=rage?'#ff2200':'#aa0000';ctx.lineWidth=3;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+30,by+14);ctx.lineTo(ox+50,by+14);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox+50,by+14);ctx.lineTo(ox+72,by+14);ctx.stroke();
+    ctx.fillStyle='#2a2008';ctx.strokeStyle='#554400';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(ox+26,by+2);ctx.lineTo(ox+72,by+2);ctx.lineTo(ox+72,by+8);ctx.lineTo(ox+62,by+4);ctx.lineTo(ox+54,by+10);ctx.lineTo(ox+44,by+4);ctx.lineTo(ox+36,by+10);ctx.lineTo(ox+28,by+4);ctx.lineTo(ox+26,by+8);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle=rage?'#ff0000':'#aa0000';cEl(ox+54,by+1,3.5,3.5,rage?'#ff0000':'#aa0000');
+    ctx.strokeStyle='#221822';ctx.lineWidth=6;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(ox+90,by+0);ctx.lineTo(ox+92,by+56);ctx.stroke();
+    ctx.globalAlpha=0.35+Math.sin(gFrame*0.18)*0.22;cEl(ox+90,by-4,20,20,'rgba(200,0,255,0.3)');ctx.globalAlpha=1;
+    cEl(ox+90,by-4,12,12,'rgba(180,0,200,0.85)','#330033',3);
   }
   ctx.restore();
 }
@@ -1812,16 +2751,27 @@ function drawProjectiles(){
       ctx.fillStyle='#8b7355';ctx.fillRect(sx-10,sy-2,22,4);
       ctx.fillStyle='#aaa';ctx.fillRect(sx+10,sy-4,8,8);
       ctx.fillStyle='#cc6633';ctx.fillRect(sx-12,sy-3,6,6);
+    } else if(proj.kind==='knightArrow'){
+      // Knight-fired arrow — gleaming silver with gold tip, angled along velocity
+      const ang=Math.atan2(proj.vy,proj.vx);
+      ctx.save();ctx.translate(sx,sy);ctx.rotate(ang);
+      ctx.fillStyle='#c8c8d8';ctx.fillRect(-12,-2,24,4);
+      ctx.fillStyle='#ffe066';ctx.fillRect(11,-3,6,6);
+      ctx.fillStyle='#6a5a30';ctx.fillRect(-14,-3,6,6);
+      ctx.restore();
     } else if(proj.kind==='javelin'){
       ctx.fillStyle='#8b7355';ctx.fillRect(sx-16,sy-3,36,6);
       ctx.fillStyle='#ccc';ctx.fillRect(sx+18,sy-5,8,10);
     } else if(proj.kind==='bossshot'){
-      ctx.fillStyle='#aa0000';ctx.beginPath();ctx.ellipse(sx,sy,proj.w/2,proj.h/2,0,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#ff4400';ctx.beginPath();ctx.ellipse(sx,sy,proj.w/3,proj.h/3,0,0,Math.PI*2);ctx.fill();
-      ctx.globalAlpha=0.28;ctx.fillStyle='#ff0000';ctx.beginPath();ctx.ellipse(sx,sy,proj.w,proj.h,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+      ctx.globalAlpha=0.22;cEl(sx,sy,proj.w+4,proj.h+4,'#aa0000');ctx.globalAlpha=1;
+      cEl(sx,sy,proj.w/2,proj.h/2,'#cc2200','#111',2);cEl(sx,sy,proj.w/4,proj.h/4,'#ff6600');
     } else if(proj.kind==='rock'){
       ctx.fillStyle='#7a6a58';ctx.beginPath();ctx.ellipse(sx,sy,proj.w/2,proj.h/2,proj.t*0.05,0,Math.PI*2);ctx.fill();
       ctx.fillStyle='#9a8a78';ctx.beginPath();ctx.ellipse(sx-3,sy-3,proj.w/5,proj.h/5,0,0,Math.PI*2);ctx.fill();
+    } else if(proj.kind==='iceshard'){
+      ctx.fillStyle='#aaddff';ctx.strokeStyle='#3388cc';ctx.lineWidth=2;
+      ctx.save();ctx.translate(sx,sy);ctx.rotate(proj.t*0.14);
+      ctx.beginPath();ctx.moveTo(0,-proj.h);ctx.lineTo(proj.w/3,0);ctx.lineTo(0,proj.h);ctx.lineTo(-proj.w/3,0);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
     } else if(proj.kind==='lavaBlob'){
       ctx.fillStyle=`rgba(255,80,0,0.92)`;ctx.beginPath();ctx.ellipse(sx,sy,proj.w/2,proj.h/2,0,0,Math.PI*2);ctx.fill();
       ctx.fillStyle=`rgba(255,200,0,0.7)`;ctx.beginPath();ctx.ellipse(sx-2,sy-2,proj.w/4,proj.h/4,0,0,Math.PI*2);ctx.fill();
@@ -1874,9 +2824,14 @@ function drawProgressBar(){
 function nextLevel(){
   curLevel++;
   if(curLevel>5){showEndScreen(true);return;}
+  allKnights=allKnights.filter(k=>k.persistent!==false);
+  // Save knight state so retry restores them
+  savedKnights=allKnights.map(k=>Object.assign({},k));
   generateLevel(curLevel);
-  if(p1) resetPlayer(p1,100,GROUND-80);
-  if(p2) resetPlayer(p2,60,GROUND-80);
+  if(p1){resetPlayer(p1,100,GROUND-80);p1.hp=p1.maxHp;}
+  if(p2){resetPlayer(p2,60,GROUND-80);p2.hp=p2.maxHp;}
+  // Restore full lives each level
+  lives1=LIVES_START; lives2=LIVES_START;
   updateHUD();
   showLevelScreen();
 }
@@ -1905,14 +2860,16 @@ function showEndScreen(won){
   gState='end';
   const ov=document.getElementById('overlay');
   ov.style.display='flex';
+  const failedLevel=curLevel;
   ov.innerHTML=`
-    <div class="ov-title">${won?'🌟 Victory! The Knight is Free! 🌟':'💀 The Evil King Prevails...'}</div>
-    <div class="ov-sub">${won?'Princess and the Unicorn saved the kingdom!':'All lives lost. Try again?'}</div>
+    <div class="ov-title">${won?'🌟 The King is Freed! Kingdom Saved! 🌟':'💀 Defeated on Level '+failedLevel+'...'}</div>
+    <div class="ov-sub">${won?'The Princess reunited with her father and saved the realm!':'All lives lost. Keep going?'}</div>
     <div style="font-size:22px;color:#ffe066;margin:10px 0;font-weight:800;">
       Score: ${score1}${numPlayers===2?' + '+score2:''}
     </div>
     <div class="btn-row">
-      <button class="gBtn" onclick="startGame(${numPlayers},1)">▶ Play Again</button>
+      ${!won?`<button class="gBtn" style="border-color:#f59e0b;color:#fde68a" onclick="startGame(${numPlayers},${failedLevel})">↩ Retry Level ${failedLevel}</button>`:''}
+      <button class="gBtn" onclick="startGame(${numPlayers},1)">${won?'▶ Play Again':'▶ Start Over'}</button>
       <button class="gBtn" onclick="showMenuOverlay()">☰ Menu</button>
       <button class="gBtn" onclick="showTitle()">🏠 Title</button>
     </div>
@@ -1924,7 +2881,7 @@ function showTitle(){
   ov.style.display='flex';
   ov.innerHTML=`
     <div class="ov-title">✨ Princess & the Unicorn ✨</div>
-    <div class="ov-sub">Save Sir Knight from the Evil King!</div>
+    <div class="ov-sub">Rescue the captives &amp; save the kingdom!</div>
     <div class="ctrl-grid">
       <div class="ctrl-box">
         <div class="ctrl-head">🦄 P1 — Princess (Arrow Keys)</div>
@@ -1956,11 +2913,23 @@ function showTitle(){
 function startGame(np, startLv){
   numPlayers=np;
   gState='playing';
+  const wasLevel=curLevel;
   curLevel=startLv||1;
-  score1=0;score2=0;
   lives1=LIVES_START;lives2=LIVES_START;
   gFrame=0;
-  allKnights=[];
+  // Retrying a level (same level, not fresh start from 1): restore saved knights
+  if(curLevel>1&&curLevel===wasLevel&&savedKnights.length>0){
+    allKnights=savedKnights.map(k=>Object.assign({},k));
+  } else if(curLevel<=1){
+    // Fresh game from level 1 — no knights yet
+    allKnights=[];
+    savedKnights=[];
+    score1=0;score2=0;
+  } else {
+    // Jumping to a mid-level via menu — restore saved knights if any
+    allKnights=savedKnights.length>0?savedKnights.map(k=>Object.assign({},k)):[];
+    score1=0;score2=0;
+  }
 
   p1=makeP1(100,GROUND-80);
   p2=np===2?makeP2(60,GROUND-80):null;
@@ -2015,16 +2984,28 @@ function gameLoop(){
   // Dead messages
   if(p1&&p1.dead&&lives1>0){
     ctx.fillStyle='rgba(255,80,80,0.8)';ctx.font='bold 14px Nunito';ctx.textAlign='center';
-    ctx.fillText(`💀 Respawning… ${LIVES_START-lives1+1} lives left`,W/2,H/2-16);
+    { const rem=lives1-1; ctx.fillText(`💀 Respawning… ${rem} ${rem===1?'life':'lives'} remaining`,W/2,H/2-16); }
   }
   if(bossDefeated&&!knightFreed){
     ctx.fillStyle='rgba(255,220,50,0.95)';ctx.font='bold 26px Cinzel,serif';ctx.textAlign='center';
     ctx.fillText('BOSS DEFEATED! 🏆',W/2,H/2-28);
   }
   if(knightFreed){
-    ctx.fillStyle='rgba(255,248,100,0.95)';ctx.font='bold 22px Cinzel,serif';ctx.textAlign='center';
-    ctx.fillText('🌟 SIR KNIGHT IS FREE! 🌟',W/2,H/2-18);
-    ctx.fillStyle='rgba(255,200,50,0.8)';ctx.font='14px Nunito';ctx.fillText('Preparing next level…',W/2,H/2+14);
+    const freedNames={
+      blue_knight:'Sir Aldwyn the Knight',
+      villager:'The Captive Villagers',
+      elf_archer:'Sylara the Elf Archer',
+      red_knight:'Sir Brennan the Red',
+      green_knight:'Sir Roland the Green',
+      royal_father:'King Aldric, Your Father',
+    };
+    const cfg3=LEVELS[curLevel-1];
+    const freedName=freedNames[cfg3&&cfg3.allyType]||'Sir Knight';
+    const isFinal=curLevel===5;
+    ctx.fillStyle='rgba(255,248,100,0.95)';ctx.font='bold 20px Cinzel,serif';ctx.textAlign='center';
+    ctx.fillText('🌟 '+freedName.toUpperCase()+' IS FREE! 🌟',W/2,H/2-18);
+    ctx.fillStyle='rgba(255,200,50,0.8)';ctx.font='14px Nunito';
+    ctx.fillText(isFinal?'The Kingdom is saved!':'Preparing next level…',W/2,H/2+14);
   }
 }
 
